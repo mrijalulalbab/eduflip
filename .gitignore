@@ -1,0 +1,31 @@
+
+# Dependencies
+vendor/
+node_modules/
+
+# Environment variables
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+error_log
+*.log
+
+# Temp files
+*.tmp
+*.bak
+
+# User uploads (optional: usually you don't commit large uploads, but for a starter kit you might keep them. Uncomment to ignore)
+# web/public/assets/uploads/
+
+# Brain artifacts
+.gemini/
+.antigravity/
