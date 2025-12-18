@@ -9,34 +9,67 @@ EduFlip adalah aplikasi web berbasis **Flipped Classroom** yang dirancang untuk 
 - **Kuis Online**: Mahasiswa dapat mengerjakan kuis dengan sistem penilaian otomatis.
 - **Forum Diskusi**: Ruang diskusi untuk setiap kursus.
 
-## 🛠️ Teknologi
+## 🛠️ Teknologi & Arsitektur
 
-- **Backend**: Native PHP
-- **Database**: MySQL
-- **Frontend**: HTML5, CSS3 (Vanilla + FontAwesome/RemixIcon)
+### Tech Stack
 
-## 🚀 Cara Instalasi
+- **Backend**: Native PHP 8.2
+- **Database**: MySQL 8.0
+- **Frontend**: HTML5, CSS3
+- **Infrastructure**: Docker & Docker Compose
+- **DNS Server**: BIND9
 
-1.  **Persiapan Folder**
+### Arsitektur Container
 
-    - Pastikan folder `eduflipp` berada di dalam direktori server lokal Anda (contoh: `c:\xampp\htdocs\eduflipp`).
+Sistem berjalan di atas 3 container terpisah yang terhubung via virtual network `eduflip_net`:
 
-2.  **Setup Database**
+1. **eduflip_web**: Web Server (Apache + PHP)
+2. **eduflip_db**: Database Server (MySQL)
+3. **eduflip_dns**: DNS Server (BIND9)
 
-    - Buka phpMyAdmin (biasanya di `http://localhost/phpmyadmin`).
-    - Buat database baru jika diperlukan, atau biarkan skrip yang menanganinya.
-    - Import file `database/init.sql`. Skrip ini akan otomatis membuat database `eduflip` dan tabel-tabel yang diperlukan beserta data dummy awal.
+## 🚀 Cara Instalasi & Menjalankan (Docker)
 
-3.  **Konfigurasi (Opsional)**
+**Prasyarat:**
 
-    - Jika Anda menggunakan password resource database selain kosong (default XAMPP), buka file `web/includes/config.php` dan sesuaikan bagian `DB_PASS`.
+- Docker Desktop sudah terinstall dan running.
 
-4.  **Akses Aplikasi**
-    - Buka browser dan kunjungi: `http://localhost/eduflipp/web/public/`
+### 1. Jalankan Container
+
+Buka terminal di folder proyek dan jalankan perintah:
+
+```bash
+docker-compose up -d --build
+```
+
+Tunggu hingga proses build selesai.
+
+### 2. Cek Status Container
+
+Pastikan ketiga container (web, db, dns) statusnya **Up**:
+
+```bash
+docker-compose ps
+```
+
+### 3. Konfigurasi DNS (PENTING!)
+
+Agar bisa mengakses via domain `eduflip.local`, arahkan DNS komputer Anda ke `127.0.0.1`.
+
+**Cara Cepat (Windows):**
+Edit file `C:\Windows\System32\drivers\etc\hosts` (Run as Administrator), tambahkan:
+
+```
+127.0.0.1    eduflip.local
+127.0.0.1    www.eduflip.local
+127.0.0.1    db.eduflip.local
+```
+
+### 4. Akses Aplikasi
+
+Buka browser dan kunjungi:
+👉 **[http://eduflip.local](http://eduflip.local)**
 
 ## 🔑 Akun Default (Untuk Pengujian)
-
-Berikut adalah akun yang sudah disiapkan dalam database untuk pengujian:
 
 | Role          | Email                 | Password   |
 | :------------ | :-------------------- | :--------- |
@@ -46,5 +79,10 @@ Berikut adalah akun yang sudah disiapkan dalam database untuk pengujian:
 
 ---
 
-**Catatan untuk Penilai:**
-Folder `web/` berisi seluruh _source code_ aplikasi. Folder `database/` berisi skrip SQL.
+## 📂 Dokumentasi Proyek (Tugas CSN)
+
+Dokumentasi lengkap untuk tugas mata kuliah SJK/CSN dapat ditemukan di folder `docs/`:
+
+- **[Laporan Proyek](docs/Draft_Laporan_Proyek_CSN.md)**: Detail implementasi teknis.
+- **[Slide Presentasi](docs/Slide_PPT_Content.md)**: Konten slide PPT.
+- **[Panduan Belajar](docs/Panduan_Belajar.md)**: Q&A dan pemahaman konsep Docker.
