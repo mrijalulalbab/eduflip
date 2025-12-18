@@ -2,14 +2,12 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <aside class="dashboard-sidebar">
-    <div class="sidebar-header">
-        <a href="../index.php" class="sidebar-brand">
-            <div class="logo-icon">
-                <i class="ri-book-open-fill"></i>
-            </div>
-            <span>EduFlip</span>
-        </a>
-    </div>
+    <a href="../index.php" class="sidebar-brand">
+        <div class="brand-icon">
+            <i class="ri-book-open-fill"></i>
+        </div>
+        <span class="brand-text">EduFlip</span>
+    </a>
 
     <nav class="sidebar-nav">
         <a href="index.php" class="nav-item <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">
@@ -27,6 +25,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="quizzes.php" class="nav-item <?php echo $current_page == 'quizzes.php' ? 'active' : ''; ?>">
             <i class="ri-questionnaire-line"></i>
             <span>Quizzes</span>
+        </a>
+        <a href="forums.php" class="nav-item <?php echo (basename($current_page) == 'forums.php' || basename($current_page) == 'forum_detail.php') ? 'active' : ''; ?>">
+             <i class="ri-discuss-line"></i>
+             <span>Forums</span>
+        </a>
+        <a href="analytics.php" class="nav-item <?php echo basename($current_page) == 'analytics.php' ? 'active' : ''; ?>">
+             <i class="ri-bar-chart-2-line"></i>
+             <span>Analytics</span>
         </a>
         
         <div style="flex:1"></div>

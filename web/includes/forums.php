@@ -92,4 +92,27 @@ function createReply($thread_id, $author_id, $content) {
         return false;
     }
 }
+// Get threads for all courses taught by an instructor
+function getInstructorThreads($instructor_id, $search = '') {
+    global $pdo;
+    $sql = "SELECT t.*, u.full_name as author_name, c.course_code 
+            FROM forum_threads t
+            JOIN users u ON t.author_id = u.id
+            JOIN courses c ON t.course_id = c.id
+            WHERE c.created_by = ?";
+            
+    $params = [$instructor_id];
+    
+    if (!empty($search)) {
+        $sql .= " AND (t.title LIKE ? OR t.content LIKE ?)";
+        $params[] = "%$search%";
+        $params[] = "%$search%";
+    }
+    
+    $sql .= " ORDER BY t.created_at DESC";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>

@@ -39,7 +39,7 @@ $assets_path = '../assets/';
 </head>
 <body>
     <div class="dashboard-container">
-        <?php include 'sidebar.php'; ?>
+        <?php include __DIR__ . '/sidebar.php'; ?>
         
         <div class="dashboard-main">
             <!-- Top Header -->

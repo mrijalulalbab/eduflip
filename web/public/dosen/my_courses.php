@@ -66,7 +66,9 @@ include 'includes/header.php';
                                         <div class="progress-bar">
                                             <div class="progress-fill" style="width: 100%"></div> <!-- Full width for instructor visual -->
                                         </div>
-                                        <a href="manage_course.php?id=<?php echo $course['id']; ?>" class="btn btn-primary" style="width: 100%;">Manage Course</a>
+                                        <a href="manage_course.php?id=<?php echo $course['id']; ?>" class="btn btn-primary" style="width: 100%;">
+                                            <i class="ri-upload-cloud-2-line"></i> Upload Materials & Manage
+                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -1,13 +1,16 @@
 <?php
 // Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', ''); // Default XAMPP password is empty
-define('DB_NAME', 'eduflip');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: ''); // Default XAMPP password is empty
+define('DB_NAME', getenv('DB_NAME') ?: 'eduflip');
 
 // Application Configuration
 define('APP_NAME', 'EduFlip');
-define('APP_URL', 'http://localhost/eduflipp/web/public');
+// Dynamic APP_URL for Docker/Tunneling
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+// In Docker with DocumentRoot set to web/public, the path is root.
+define('APP_URL', $protocol . "://" . $_SERVER['HTTP_HOST']);
 
 try {
     $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);

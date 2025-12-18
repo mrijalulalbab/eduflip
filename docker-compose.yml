@@ -1,0 +1,51 @@
+services:
+  web:
+    build: .
+    container_name: eduflip_web
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=eduflip
+      - DB_USER=root
+      - DB_PASS=root
+    depends_on:
+      - db
+    networks:
+      - eduflip_net
+    volumes:
+      - ./web/public/assets/uploads:/var/www/html/web/public/assets/uploads
+
+  db:
+    image: mysql:8.0
+    container_name: eduflip_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: eduflip
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Initialize DB with existing SQL
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - eduflip_net
+
+  dns:
+    image: ubuntu/bind9
+    container_name: eduflip_dns
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ./docker/dns/named.conf:/etc/bind/named.conf
+      - ./docker/dns/zones:/etc/bind/zones
+    networks:
+      - eduflip_net
+
+networks:
+  eduflip_net:
+    driver: bridge
+
+volumes:
+  db_data:

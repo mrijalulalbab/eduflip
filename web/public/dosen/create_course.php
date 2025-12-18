@@ -3,16 +3,33 @@ require_once '../../includes/config.php';
 require_once '../../includes/courses.php'; // Ensure this is loaded before header if possible, or inside header
 // Actually header loads auth which is fine. We need courses functions.
 
-include 'includes/header.php'; 
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle Thumbnail Upload
+    $thumbnailPath = '';
+    if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        $fileName = $_FILES['thumbnail']['name'];
+        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        
+        if (in_array($fileExt, $allowed)) {
+             $uploadDir = '../../public/assets/uploads/thumbnails/';
+             if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+             
+             $newFileName = uniqid('cover_') . '.' . $fileExt;
+             if (move_uploaded_file($_FILES['thumbnail']['tmp_name'], $uploadDir . $newFileName)) {
+                 $thumbnailPath = 'assets/uploads/thumbnails/' . $newFileName;
+             }
+        }
+    }
+
     $data = [
         'course_name' => $_POST['course_name'],
         'course_code' => $_POST['course_code'],
         'description' => $_POST['description'],
         'category' => $_POST['category'] ?? 'general',
-        'thumbnail' => '' // Future: Handle upload
+        'thumbnail' => $thumbnailPath
     ];
     
     $result = createCourse($_SESSION['user_id'], $data);
@@ -24,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = $result['message'];
     }
 }
+
+include 'includes/header.php';
 ?>
 
 <div class="reveal-element">
@@ -68,8 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="course_code" class="form-control" placeholder="e.g. WEB201" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Cover Image (URL for now)</label>
-                    <input type="text" name="thumbnail" class="form-control" placeholder="https://...">
+                    <label class="form-label">Cover Image</label>
+                    <input type="file" name="thumbnail" class="form-control" accept="image/*">
+                    <p class="text-xs text-muted mt-1">Recommended: 16:9 ratio, JPG/PNG</p>
                 </div>
             </div>
             

@@ -21,11 +21,16 @@
             <i class="ri-book-read-line"></i>
             <span>All Courses</span>
         </a>
+
+        <a href="quizzes.php" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'quizzes.php' ? 'active' : ''; ?>">
+            <i class="ri-questionnaire-line"></i>
+            <span>Quizzes</span>
+        </a>
         
         <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
-             <a href="../../index.php" class="nav-item">
-                <i class="ri-home-line"></i>
-                <span>Back to Main Site</span>
+             <a href="../logout.php" class="nav-item" style="color: #ef4444;">
+                <i class="ri-logout-box-line"></i>
+                <span>Logout</span>
             </a>
         </div>
     </nav>

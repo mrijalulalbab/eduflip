@@ -25,7 +25,11 @@ if (!isset($base_url)) {
         <div class="dashboard-main">
             <!-- Top Header Component -->
             <header class="dashboard-header">
-                <div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                     <!-- Mobile Sidebar Toggle -->
+                     <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="ri-menu-2-line"></i>
+                    </button>
                      <!-- Breadcrumb or Title handled by page -->
                 </div>
                 
@@ -39,3 +43,14 @@ if (!isset($base_url)) {
                     </div>
                 </div>
             </header>
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+            <script>
+            function toggleSidebar() {
+                document.querySelector('.dashboard-sidebar').classList.toggle('active');
+                document.getElementById('sidebar-overlay').classList.toggle('active');
+                document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden'; // Prevent background scrolling
+            }
+            </script>

@@ -24,8 +24,8 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'dosen') {
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="../assets/css/student.css"> <!-- Reuse student dashboard styles -->
-    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/student.css?v=<?php echo time(); ?>"> <!-- Reuse student dashboard styles -->
+    <link rel="stylesheet" href="../assets/css/main.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <div class="dashboard-container">
@@ -33,9 +33,13 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'dosen') {
         
         <main class="dashboard-main">
             <header class="dashboard-header">
-                <div>
-                     <!-- Left side empty like Student (or breadcrumbs) -->
+                <!-- Mobile Sidebar Toggle -->
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="ri-menu-2-line"></i>
+                    </button>
                 </div>
+
                 <div class="user-snippet">
                     <div class="user-info">
                         <div class="user-name"><?php echo htmlspecialchars($_SESSION['full_name'] ?? 'Lecturer'); ?></div>
@@ -46,5 +50,21 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'dosen') {
                     </div>
                 </div>
             </header>
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+            <script>
+            function toggleSidebar() {
+                // Select sidebar - Dosen dashboard might use same class or check sidebar.php
+                const sidebar = document.querySelector('.dashboard-sidebar');
+                if(sidebar) sidebar.classList.toggle('active');
+                
+                const overlay = document.getElementById('sidebar-overlay');
+                if(overlay) overlay.classList.toggle('active');
+                
+                document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden'; 
+            }
+            </script>
             
             <div class="dashboard-content">

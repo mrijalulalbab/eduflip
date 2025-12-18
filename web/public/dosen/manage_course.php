@@ -3,18 +3,24 @@ require_once '../../includes/config.php';
 require_once '../../includes/auth.php';
 
 requireLogin();
-if ($_SESSION['role'] !== 'dosen') {
+if (!in_array($_SESSION['role'], ['dosen', 'admin'])) {
     header('Location: ../login.php');
     exit;
 }
 
 $course_id = $_GET['id'] ?? 0;
-$dosen_id = $_SESSION['user_id'];
-$dosen_name = $_SESSION['full_name'];
+$user_id = $_SESSION['user_id'];
+$user_role = $_SESSION['role'];
 
-// Fetch Course & Verify Ownership
-$stmt = $pdo->prepare("SELECT * FROM courses WHERE id = ? AND created_by = ?");
-$stmt->execute([$course_id, $dosen_id]);
+// Fetch Course & Verify Ownership/Access
+if ($user_role === 'admin') {
+    $stmt = $pdo->prepare("SELECT * FROM courses WHERE id = ?");
+    $stmt->execute([$course_id]);
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM courses WHERE id = ? AND created_by = ?");
+    $stmt->execute([$course_id, $user_id]);
+}
+
 $course = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$course) {
@@ -26,20 +32,21 @@ $messageType = '';
 
 // Handle File Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_material'])) {
-    $title = trim($_POST['title']);
+    $meeting = (int)$_POST['meeting'];
+    $topic = trim($_POST['topic']);
+    
+    // Auto-format title: "Pertemuan X: [Topic]"
+    $title = "Pertemuan $meeting: $topic";
+    
     $type = $_POST['type'];
     
     // File Upload Logic
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['pdf' => 'application/pdf', 'video' => 'video/mp4'];
         $fileTmp = $_FILES['file']['tmp_name'];
         $fileName = $_FILES['file']['name'];
         $fileSize = $_FILES['file']['size'];
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         
-        // Log for debugging
-        error_log("Uploading file: $fileName, Type: $type, Ext: $fileExt");
-
         // Validate type matches extension (loose check)
         if (($type == 'pdf' && $fileExt != 'pdf') || ($type == 'video' && $fileExt != 'mp4')) {
              $message = "File type mismatch. Please upload a valid .$type file.";
@@ -54,12 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_material'])) {
              if (move_uploaded_file($fileTmp, $destination)) {
                  // Insert into DB
                  $stmt = $pdo->prepare("
-                    INSERT INTO materials (course_id, title, description, file_path, file_type, file_size, uploaded_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO materials (course_id, title, description, file_path, file_type, file_size, uploaded_by, order_sequence)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                  ");
                  $webPath = 'assets/uploads/materials/' . $newFileName;
-                 if ($stmt->execute([$course_id, $title, 'Uploaded via Dosen Portal', $webPath, $type, $fileSize, $dosen_id])) {
-                     $message = "Material uploaded successfully!";
+                 
+                 // Description defaults to topic for now
+                 $description = $topic;
+                 
+                 if ($stmt->execute([$course_id, $title, $description, $webPath, $type, $fileSize, $user_id, $meeting])) {
+                     $message = "Material for Meeting $meeting uploaded successfully!";
                      $messageType = "success";
                  } else {
                      $message = "Database error.";
@@ -76,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_material'])) {
     }
 }
 
-// Fetch Materials
-$stmt = $pdo->prepare("SELECT * FROM materials WHERE course_id = ? ORDER BY created_at DESC");
+// Fetch Materials - Sorted by Meeting Order
+$stmt = $pdo->prepare("SELECT * FROM materials WHERE course_id = ? ORDER BY order_sequence ASC, created_at DESC");
 $stmt->execute([$course_id]);
 $materials = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -106,10 +117,10 @@ include 'includes/header.php';
              <div class="reveal-element">
                 <!-- Header -->
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
-                    <a href="my_courses.php" class="btn btn-ghost" style="padding: 0.5rem;"><i class="ri-arrow-left-line"></i></a>
+                    <a href="<?php echo $user_role === 'admin' ? '../admin/courses.php' : 'my_courses.php'; ?>" class="btn btn-ghost" style="padding: 0.5rem;"><i class="ri-arrow-left-line"></i></a>
                     <div>
                         <h1 style="font-size: 1.75rem; font-weight: 700; margin: 0; color: white;"><?php echo htmlspecialchars($course['course_name']); ?></h1>
-                        <p class="text-muted" style="margin: 0; font-size: 0.9rem;"><?php echo htmlspecialchars($course['course_code']); ?> &bull; Manage Content</p>
+                        <p class="text-muted" style="margin: 0; font-size: 0.9rem;"><?php echo htmlspecialchars($course['course_code']); ?> &bull; Manage Content (<?php echo ucfirst($user_role); ?> View)</p>
                     </div>
                 </div>
 
@@ -138,23 +149,33 @@ include 'includes/header.php';
                         <!-- Upload Form -->
                         <div class="lg:col-span-1">
                             <div style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05);">
-                                <h3 style="color: white; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="ri-upload-cloud-2-line text-blue-400"></i> Upload Material</h3>
+                                <h3 style="color: white; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="ri-add-circle-line text-emerald-400"></i> Add New Meeting Material</h3>
                                 <form method="POST" enctype="multipart/form-data">
                                     <input type="hidden" name="upload_material" value="1">
-                                    <div style="margin-bottom: 1rem;">
-                                        <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Title</label>
-                                        <input type="text" name="title" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; color: white; outline: none;" placeholder="e.g. Lecture 1 Slides" required>
+                                    
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div style="margin-bottom: 1rem;">
+                                            <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Pertemuan Ke-</label>
+                                            <input type="number" name="meeting" min="1" max="28" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; color: white; outline: none;" placeholder="1" required value="<?php echo count($materials) + 1; ?>">
+                                        </div>
+                                        <div style="margin-bottom: 1rem;">
+                                            <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">File Type</label>
+                                            <select name="type" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; color: white; outline: none;">
+                                                <option value="pdf" style="background:#1e293b;">PDF</option>
+                                                <option value="video" style="background:#1e293b;">Video</option>
+                                            </select>
+                                        </div>
                                     </div>
+
                                     <div style="margin-bottom: 1rem;">
-                                        <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Type</label>
-                                        <select name="type" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; color: white; outline: none;">
-                                            <option value="pdf" style="background:#1e293b;">PDF Document</option>
-                                            <option value="video" style="background:#1e293b;">Video (MP4)</option>
-                                        </select>
+                                        <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Topik / Judul Materi</label>
+                                        <input type="text" name="topic" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 0.75rem; border-radius: 8px; color: white; outline: none;" placeholder="e.g. Pengenalan Framework" required>
                                     </div>
+
                                     <div style="margin-bottom: 1.5rem;">
                                         <label style="display: block; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">File</label>
                                         <input type="file" name="file" class="text-gray-400 text-sm" required>
+                                        <p class="text-xs text-muted mt-1">Supported: PDF, MP4</p>
                                     </div>
                                     <button type="submit" class="btn btn-primary" style="width: 100%;">Upload Material</button>
                                 </form>
@@ -186,7 +207,7 @@ include 'includes/header.php';
                                                     </div>
                                                     <div>
                                                         <div style="font-weight: 500; color: white;"><?php echo htmlspecialchars($mat['title']); ?></div>
-                                                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);"><?php echo $mat['file_type']; ?> &bull; <?php echo date('M d, Y', strtotime($mat['created_at'])); ?></div>
+                                                        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);"><?php echo $mat['file_type']; ?> &bull; Seq: <?php echo $mat['order_sequence']; ?></div>
                                                     </div>
                                                 </div>
                                                 <div style="display: flex; gap: 0.5rem;">

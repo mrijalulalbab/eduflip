@@ -100,8 +100,10 @@ function switchTab(type, btn) {
 }
 </script>
 
+
 <?php
 function renderCourseCard($course) {
+    $progress = calculateCourseProgress($_SESSION['user_id'], $course['id']);
 ?>
     <div class="dashboard-course-card fade-in">
         <img src="<?php echo !empty($course['thumbnail']) ? $course['thumbnail'] : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=400'; ?>" class="card-img-top" alt="Course Bg">
@@ -119,12 +121,14 @@ function renderCourseCard($course) {
             <div class="card-actions">
                     <div class="flex justify-between text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;">
                     <span>Progress</span>
-                    <span>0%</span>
+                    <span><?php echo $progress; ?>%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 0%"></div>
+                    <div class="progress-fill" style="width: <?php echo $progress; ?>%"></div>
                 </div>
-                <a href="learn.php?course_id=<?php echo $course['id']; ?>" class="btn btn-outline" style="width: 100%;">Go to Class</a>
+                <a href="learn.php?course_id=<?php echo $course['id']; ?>" class="btn btn-outline" style="width: 100%;">
+                    <?php echo $progress > 0 ? 'Continue Learning' : 'Start Learning'; ?>
+                </a>
             </div>
         </div>
     </div>

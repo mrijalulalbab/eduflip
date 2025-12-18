@@ -33,6 +33,16 @@ $stmt = $pdo->prepare("
 $stmt->execute([$dosen_id]);
 $stats['students'] = $stmt->fetchColumn();
 
+// 3. Course Discussions
+$stmt = $pdo->prepare("
+    SELECT COUNT(ft.id) 
+    FROM forum_threads ft
+    JOIN courses c ON ft.course_id = c.id
+    WHERE c.created_by = ?
+");
+$stmt->execute([$dosen_id]);
+$stats['discussions'] = $stmt->fetchColumn();
+
 // Fetch Recent Courses
 $stmt = $pdo->prepare("SELECT * FROM courses WHERE created_by = ? ORDER BY created_at DESC LIMIT 3");
 $stmt->execute([$dosen_id]);
@@ -78,13 +88,13 @@ $dosen_name = $_SESSION['full_name'];
                     </div>
                 </div>
                 
-                 <div class="stat-card">
+                 <div class="stat-card" onclick="window.location.href='forums.php'" style="cursor: pointer;">
                     <div class="stat-icon green">
-                        <i class="ri-chat-check-line"></i>
+                        <i class="ri-discuss-line"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>0</h3>
-                        <p>Pending Reviews</p>
+                        <h3><?php echo $stats['discussions']; ?></h3>
+                        <p>Course Discussions</p>
                     </div>
                 </div>
             </div>

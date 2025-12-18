@@ -1,6 +1,20 @@
 <?php
 require_once '../../includes/config.php';
 require_once '../../includes/admin.php';
+require_once '../../includes/auth.php';
+
+requireLogin();
+if ($_SESSION['role'] !== 'admin') {
+    // Prevent redirect loop if already logged in as non-admin
+    http_response_code(403);
+    echo "<div style='padding:50px; text-align:center; font-family:sans-serif;'>
+            <h1>403 Access Denied</h1>
+            <p>You are currently logged in as <strong>" . htmlspecialchars($_SESSION['role']) . "</strong>.</p>
+            <p>This page requires <strong>admin</strong> privileges.</p>
+            <p><a href='../../logout.php' style='color:blue; text-decoration:underline;'>Click here to Logout</a> and sign in as an Admin.</p>
+          </div>";
+    exit;
+}
 
 include 'includes/header.php';
 
@@ -31,6 +45,9 @@ $courses = getAllCoursesAdmin($search);
             <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-pink-400 mb-2">Course Management</h1>
             <p class="text-muted">Oversee and audit platform content.</p>
         </div>
+        <a href="create_course.php" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
+            <i class="ri-add-circle-line"></i> Add New Course
+        </a>
     </div>
     
     <!-- Filters -->
@@ -93,6 +110,9 @@ $courses = getAllCoursesAdmin($search);
                                 </td>
                                 <td class="text-right">
                                     <div class="flex items-center justify-end gap-2">
+                                        <!-- Manage Content Button -->
+                                        <a href="manage_course.php?id=<?php echo $course['id']; ?>" class="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition" title="Manage Content"><i class="ri-folder-settings-line"></i></a>
+
                                         <a href="../courses/detail.php?id=<?php echo $course['id']; ?>" target="_blank" class="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white flex items-center justify-center transition" title="View"><i class="ri-external-link-line"></i></a>
                                         <form method="POST" onsubmit="return confirm('Are you sure you want to delete this course? This action cannot be undone.');" style="display:inline;">
                                             <input type="hidden" name="delete_course_id" value="<?php echo $course['id']; ?>">
