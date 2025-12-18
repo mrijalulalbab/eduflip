@@ -78,11 +78,3 @@ Buka browser dan kunjungi:
 | **Mahasiswa** | `student@eduflip.com` | `password` |
 
 ---
-
-## 📂 Dokumentasi Proyek (Tugas CSN)
-
-Dokumentasi lengkap untuk tugas mata kuliah SJK/CSN dapat ditemukan di folder `docs/`:
-
-- **[Laporan Proyek](docs/Draft_Laporan_Proyek_CSN.md)**: Detail implementasi teknis.
-- **[Slide Presentasi](docs/Slide_PPT_Content.md)**: Konten slide PPT.
-- **[Panduan Belajar](docs/Panduan_Belajar.md)**: Q&A dan pemahaman konsep Docker.
