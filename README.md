@@ -1,64 +1,85 @@
-# EduFlip - Flipped Classroom Management System
+# 🎓 EduFlip - Flipped Classroom LMS
 
-EduFlip adalah aplikasi web berbasis **Flipped Classroom** yang dirancang untuk membantu dosen dan mahasiswa dalam kegiatan belajar mengajar yang lebih interaktif. Sistem ini mencakup manajemen kursus, materi, kuis, dan forum diskusi.
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
+[![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php)](https://www.php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![BIND9](https://img.shields.io/badge/DNS-BIND9-green)](https://www.isc.org/bind/)
+[![Nagios](https://img.shields.io/badge/Monitoring-Nagios-orange)](https://www.nagios.org/)
 
-## 📋 Fitur Utama
+> **Learning Management System** berbasis konsep _Flipped Classroom_ untuk mendukung pembelajaran interaktif antara dosen dan mahasiswa.
 
-- **Multi-role User**: Admin, Dosen, dan Mahasiswa.
-- **Manajemen Kursus**: Dosen dapat membuat kursus dan mengunggah materi.
-- **Kuis Online**: Mahasiswa dapat mengerjakan kuis dengan sistem penilaian otomatis.
-- **Forum Diskusi**: Ruang diskusi untuk setiap kursus.
+---
 
-## 🛠️ Teknologi & Arsitektur
+## ✨ Fitur Utama
 
-### Tech Stack
+| Fitur                   | Deskripsi                                                         |
+| ----------------------- | ----------------------------------------------------------------- |
+| 👥 **Multi-Role**       | Admin, Dosen, dan Mahasiswa dengan dashboard terpisah             |
+| 📚 **Manajemen Kursus** | Dosen dapat membuat kursus dan mengunggah materi (PDF/HTML/Video) |
+| 📝 **Kuis Online**      | Sistem penilaian otomatis dengan timer dan hasil langsung         |
+| 💬 **Forum Diskusi**    | Ruang diskusi untuk setiap kursus                                 |
+| � **Analytics**         | Dashboard statistik untuk dosen                                   |
+| 🏆 **Sertifikat**       | Sertifikat digital untuk siswa yang lulus                         |
 
-- **Backend**: Native PHP 8.2
-- **Database**: MySQL 8.0
-- **Frontend**: HTML5, CSS3
-- **Infrastructure**: Docker & Docker Compose
-- **DNS Server**: BIND9
-- **Monitoring**: Nagios
+---
 
-### Arsitektur Container
+## 🏗️ Arsitektur Sistem
 
-Sistem berjalan di atas **4 container** terpisah yang terhubung via virtual network `eduflip_net`:
+```
+┌─────────────────────────────────────────────────────────┐
+│                     Docker Engine                        │
+│  ┌───────────┐ ┌───────────┐ ┌─────────┐ ┌───────────┐  │
+│  │   WEB     │ │    DB     │ │   DNS   │ │  MONITOR  │  │
+│  │  Apache   │ │  MySQL    │ │  BIND9  │ │  Nagios   │  │
+│  │  PHP 8.2  │ │   8.0     │ │         │ │           │  │
+│  │   :80     │ │  :3306    │ │   :53   │ │  :8080    │  │
+│  └─────┬─────┘ └─────┬─────┘ └────┬────┘ └─────┬─────┘  │
+│        └─────────────┴────────────┴────────────┘        │
+│                    eduflip_net (Bridge)                  │
+└─────────────────────────────────────────────────────────┘
+```
 
-1. **eduflip_web**: Web Server (Apache + PHP) - Port 80
-2. **eduflip_db**: Database Server (MySQL) - Port 3306
-3. **eduflip_dns**: DNS Server (BIND9) - Port 53
-4. **eduflip_nagios**: Monitoring Server (Nagios) - Port 8080
+### 📦 Container Services
 
-## 🚀 Cara Instalasi & Menjalankan (Docker)
+| Container        | Image              | Port | Fungsi                     |
+| ---------------- | ------------------ | ---- | -------------------------- |
+| `eduflip_web`    | php:8.2-apache     | 80   | Web Application Server     |
+| `eduflip_db`     | mysql:8.0          | 3306 | Database Server            |
+| `eduflip_dns`    | ubuntu/bind9       | 53   | DNS Server (eduflip.local) |
+| `eduflip_nagios` | jasonrivers/nagios | 8080 | Network Monitoring         |
 
-**Prasyarat:**
+---
 
-- Docker Desktop sudah terinstall dan running.
+## 🚀 Quick Start
 
-### 1. Jalankan Container
+### Prasyarat
 
-Buka terminal di folder proyek dan jalankan perintah:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) terinstall dan running
+
+### 1️⃣ Clone & Build
 
 ```bash
+git clone https://github.com/mrijalulalbab/eduflip.git
+cd eduflip
 docker-compose up -d --build
 ```
 
-Tunggu hingga proses build selesai.
-
-### 2. Cek Status Container
-
-Pastikan keempat container (web, db, dns, nagios) statusnya **Up**:
+### 2️⃣ Verifikasi Container
 
 ```bash
 docker-compose ps
 ```
 
-### 3. Konfigurasi DNS (PENTING!)
+Pastikan **4 container** statusnya `Up`.
 
-Agar bisa mengakses via domain `eduflip.local`, arahkan DNS komputer Anda ke `127.0.0.1`.
+### 3️⃣ Konfigurasi DNS Lokal
 
-**Cara Cepat (Windows):**
-Edit file `C:\Windows\System32\drivers\etc\hosts` (Run as Administrator), tambahkan:
+Edit file `hosts` (Run as Administrator):
+
+- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
+- **Linux/Mac**: `/etc/hosts`
+
+Tambahkan baris berikut:
 
 ```
 127.0.0.1    eduflip.local
@@ -66,19 +87,81 @@ Edit file `C:\Windows\System32\drivers\etc\hosts` (Run as Administrator), tambah
 127.0.0.1    db.eduflip.local
 ```
 
-### 4. Akses Aplikasi
+### 4️⃣ Akses Aplikasi
 
-Buka browser dan kunjungi:
-
-- 👉 **Web App**: [http://eduflip.local](http://eduflip.local)
-- 👉 **Monitoring**: [http://localhost:8080](http://localhost:8080) (User: `nagiosadmin`)
-
-## 🔑 Akun Default (Untuk Pengujian)
-
-| Role          | Email                     | Password   |
-| :------------ | :------------------------ | :--------- |
-| **Admin**     | `admin@eduflip.local`     | `password` |
-| **Dosen**     | `dosen@eduflip.local`     | `password` |
-| **Mahasiswa** | `mahasiswa@eduflip.local` | `password` |
+| Service        | URL                   | Credentials               |
+| -------------- | --------------------- | ------------------------- |
+| 🌐 **Web App** | http://eduflip.local  | Lihat tabel akun di bawah |
+| � **Nagios**   | http://localhost:8080 | `nagiosadmin` / `nagios`  |
 
 ---
+
+## � Akun Default
+
+| Role             | Email                     | Password   |
+| ---------------- | ------------------------- | ---------- |
+| 🔴 **Admin**     | `admin@eduflip.local`     | `password` |
+| 🟡 **Dosen**     | `dosen@eduflip.local`     | `password` |
+| 🟢 **Mahasiswa** | `mahasiswa@eduflip.local` | `password` |
+
+---
+
+## 📁 Struktur Proyek
+
+```
+eduflipp/
+├── 📄 docker-compose.yml    # Container Orchestration
+├── 📄 Dockerfile            # Web Image Build
+├── 📂 database/
+│   └── init.sql             # Schema + Seed Data
+├── 📂 docker/
+│   ├── dns/                 # BIND9 Configuration
+│   └── nagios/              # Monitoring Configuration
+└── 📂 web/
+    ├── includes/            # PHP Libraries
+    └── public/              # Application Code
+        ├── admin/           # Admin Dashboard
+        ├── dosen/           # Lecturer Dashboard
+        ├── student/         # Student Dashboard
+        └── assets/          # CSS, JS, Uploads
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer          | Technology              |
+| -------------- | ----------------------- |
+| **Backend**    | PHP 8.2 (Native)        |
+| **Database**   | MySQL 8.0               |
+| **Web Server** | Apache 2.4              |
+| **Frontend**   | HTML5, CSS3, JavaScript |
+| **Container**  | Docker & Docker Compose |
+| **DNS**        | BIND9                   |
+| **Monitoring** | Nagios Core             |
+
+---
+
+## 👨‍💻 Tim Pengembang
+
+Proyek ini dikembangkan sebagai tugas **Sistem Jaringan Komputer (SJK/CSN)**.
+
+| Nama   | Role         |
+| ------ | ------------ |
+| Albab  | Project Lead |
+| Naufal | Developer    |
+| Niko   | Developer    |
+| Dipta  | Developer    |
+| Nilam  | Developer    |
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dibuat untuk keperluan akademik.
+
+---
+
+<p align="center">
+  <b>🎓 EduFlip</b> - Learn, Engage, Succeed
+</p>
