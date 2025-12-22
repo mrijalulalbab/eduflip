@@ -39,7 +39,7 @@ $sql = "
     SELECT q.*, c.course_name, u.full_name as creator_name
     FROM quizzes q
     JOIN courses c ON q.course_id = c.id
-    JOIN users u ON q.created_by = u.id
+    JOIN users u ON c.created_by = u.id
     WHERE q.title LIKE ? OR c.course_name LIKE ?
     ORDER BY q.created_at DESC
 ";

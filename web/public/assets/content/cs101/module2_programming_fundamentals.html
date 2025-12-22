@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modul 2: Dasar-Dasar Pemrograman</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.8;
+        color: #e2e8f0;
+        background: #0f172a;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #38bdf8;
+        border-bottom: 2px solid #1e3a5f;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #22d3ee;
+        margin-top: 2rem;
+      }
+      h3 {
+        color: #a5b4fc;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        color: #fbbf24;
+      }
+      pre {
+        background: #1e293b;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+      }
+      .highlight {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: bold;
+      }
+      .tip {
+        background: #1e3a5f;
+        border-left: 4px solid #22d3ee;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      .warning {
+        background: #422006;
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #334155;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #1e3a5f;
+        color: #38bdf8;
+      }
+      tr:nth-child(even) {
+        background: #1e293b;
+      }
+      ul,
+      ol {
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>⌨️ Modul 2: Dasar-Dasar Pemrograman</h1>
+
+    <h2>Apa Itu Program?</h2>
+    <p>
+      Program adalah <span class="highlight">serangkaian instruksi</span> yang
+      ditulis dalam bahasa pemrograman untuk memberi tahu komputer apa yang
+      harus dilakukan. Jika komputer adalah "mesin", maka program adalah "resep"
+      yang mengontrol mesin tersebut.
+    </p>
+
+    <div class="tip">
+      <strong>💡 Analogi:</strong> Bayangkan komputer adalah koki yang sangat
+      patuh tapi tidak bisa berpikir sendiri. Anda harus memberikan instruksi
+      yang sangat detail dan tepat!
+    </div>
+
+    <h2>Variabel: Tempat Menyimpan Data</h2>
+    <p>
+      <strong>Variabel</strong> adalah wadah untuk menyimpan nilai. Seperti
+      kotak berlabel yang bisa Anda isi dengan berbagai hal.
+    </p>
+
+    <pre>
+// Contoh variabel dalam JavaScript
+
+let nama = "Budi";           // String (teks)
+let umur = 20;               // Number (angka)
+let sudahLulus = false;      // Boolean (benar/salah)
+let nilaiUjian = 87.5;       // Number (desimal)
+    </pre>
+
+    <h3>Aturan Penamaan Variabel</h3>
+    <ul>
+      <li>Harus diawali huruf, underscore (_), atau dollar sign ($)</li>
+      <li>Tidak boleh mengandung spasi</li>
+      <li>Case-sensitive (<code>Nama</code> ≠ <code>nama</code>)</li>
+      <li>
+        Hindari kata-kata reserved seperti <code>if</code>, <code>for</code>,
+        <code>while</code>
+      </li>
+    </ul>
+
+    <div class="warning">
+      <strong>⚠️ Best Practice:</strong> Gunakan nama variabel yang deskriptif!
+      <code>totalHarga</code> lebih baik daripada <code>x</code>.
+    </div>
+
+    <h2>Tipe Data (Data Types)</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tipe</th>
+          <th>Deskripsi</th>
+          <th>Contoh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>String</code></td>
+          <td>Teks/karakter</td>
+          <td><code>"Hello World"</code></td>
+        </tr>
+        <tr>
+          <td><code>Number/Integer</code></td>
+          <td>Angka bulat</td>
+          <td><code>42</code>, <code>-10</code></td>
+        </tr>
+        <tr>
+          <td><code>Float/Double</code></td>
+          <td>Angka desimal</td>
+          <td><code>3.14</code>, <code>-0.5</code></td>
+        </tr>
+        <tr>
+          <td><code>Boolean</code></td>
+          <td>Nilai logika</td>
+          <td><code>true</code>, <code>false</code></td>
+        </tr>
+        <tr>
+          <td><code>Array</code></td>
+          <td>Kumpulan nilai</td>
+          <td><code>[1, 2, 3]</code></td>
+        </tr>
+        <tr>
+          <td><code>Object</code></td>
+          <td>Pasangan key-value</td>
+          <td><code>{nama: "Andi", umur: 21}</code></td>
+        </tr>
+        <tr>
+          <td><code>Null/None</code></td>
+          <td>Tidak ada nilai</td>
+          <td><code>null</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Operator: Melakukan Operasi</h2>
+
+    <h3>Operator Aritmatika</h3>
+    <pre>
+let a = 10;
+let b = 3;
+
+a + b   // 13 (Penjumlahan)
+a - b   // 7  (Pengurangan)
+a * b   // 30 (Perkalian)
+a / b   // 3.33 (Pembagian)
+a % b   // 1  (Modulus/sisa bagi)
+a ** b  // 1000 (Pangkat: 10³)
+    </pre>
+
+    <h3>Operator Perbandingan</h3>
+    <pre>
+5 == 5    // true (sama dengan)
+5 != 3    // true (tidak sama)
+5 > 3     // true (lebih besar)
+5 < 3     // false (lebih kecil)
+5 >= 5    // true (lebih besar atau sama)
+5 <= 3    // false (lebih kecil atau sama)
+    </pre>
+
+    <h3>Operator Logika</h3>
+    <pre>
+true && true   // true  (AND: keduanya harus true)
+true || false  // true  (OR: salah satu true cukup)
+!true          // false (NOT: kebalikan)
+    </pre>
+
+    <h2>Control Flow: Mengontrol Alur Program</h2>
+
+    <h3>1. Conditional (If/Else)</h3>
+    <p>Menjalankan kode berdasarkan kondisi tertentu:</p>
+    <pre>
+let nilai = 85;
+
+if (nilai >= 80) {
+    console.log("Grade: A");
+} else if (nilai >= 70) {
+    console.log("Grade: B");
+} else if (nilai >= 60) {
+    console.log("Grade: C");
+} else {
+    console.log("Grade: D");
+}
+
+// Output: "Grade: A"
+    </pre>
+
+    <h3>2. Loops (Perulangan)</h3>
+    <p>Mengulangi kode beberapa kali:</p>
+
+    <h4>For Loop</h4>
+    <pre>
+// Mencetak angka 1 sampai 5
+for (let i = 1; i <= 5; i++) {
+    console.log(i);
+}
+// Output: 1, 2, 3, 4, 5
+    </pre>
+
+    <h4>While Loop</h4>
+    <pre>
+let hitungan = 0;
+
+while (hitungan < 3) {
+    console.log("Iterasi: " + hitungan);
+    hitungan++;
+}
+// Output: Iterasi: 0, Iterasi: 1, Iterasi: 2
+    </pre>
+
+    <div class="tip">
+      <strong>💡 Kapan Pakai Apa?</strong>
+      <ul>
+        <li>
+          <strong>For loop</strong>: Ketika tahu berapa kali akan mengulang
+        </li>
+        <li>
+          <strong>While loop</strong>: Ketika pengulangan bergantung pada
+          kondisi
+        </li>
+      </ul>
+    </div>
+
+    <h2>Functions: Kode yang Dapat Dipakai Ulang</h2>
+    <p>
+      <strong>Function</strong> adalah blok kode yang diberikan nama dan bisa
+      dipanggil berulang kali. Ini membantu menghindari penulisan kode yang
+      sama.
+    </p>
+
+    <pre>
+// Mendefinisikan function
+function sapaPengguna(nama) {
+    return "Halo, " + nama + "!";
+}
+
+// Memanggil function
+console.log(sapaPengguna("Rina"));   // Output: Halo, Rina!
+console.log(sapaPengguna("Budi"));   // Output: Halo, Budi!
+    </pre>
+
+    <h3>Function dengan Multiple Parameters</h3>
+    <pre>
+function hitungLuasPersegiPanjang(panjang, lebar) {
+    return panjang * lebar;
+}
+
+let luas = hitungLuasPersegiPanjang(5, 3);
+console.log(luas);  // Output: 15
+    </pre>
+
+    <h2>Kesimpulan Modul 2</h2>
+    <ul>
+      <li>Program adalah serangkaian instruksi untuk komputer.</li>
+      <li><strong>Variabel</strong> menyimpan data dengan berbagai tipe.</li>
+      <li>
+        <strong>Operator</strong> melakukan operasi matematika dan logika.
+      </li>
+      <li>
+        <strong>Control Flow</strong> (if/else, loops) mengontrol alur eksekusi.
+      </li>
+      <li><strong>Functions</strong> membantu mengorganisir dan reuse kode.</li>
+    </ul>
+
+    <div class="tip">
+      <strong>🎯 Latihan:</strong> Coba tulis program sederhana yang meminta
+      input umur pengguna dan menampilkan apakah dia sudah dewasa (>= 18 tahun)
+      atau belum!
+    </div>
+  </body>
+</html>

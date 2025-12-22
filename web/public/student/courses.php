@@ -73,7 +73,7 @@ include 'includes/header.php';
     <?php 
     $hasGeneral = false;
     foreach ($courses as $course) {
-        if (($course['category'] ?? 'general') === 'general') {
+        if (($course['category'] ?? 'general') !== 'curriculum') {
             $hasGeneral = true;
             renderCourseCard($course);
         }

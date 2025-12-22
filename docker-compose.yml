@@ -43,6 +43,18 @@ services:
     networks:
       - eduflip_net
 
+  nagios:
+    image: jasonrivers/nagios:latest
+    container_name: eduflip_nagios
+    ports:
+      - "8080:80"
+    environment:
+      - NAGIOS_TIMEZONE=Asia/Jakarta
+    volumes:
+      - ./docker/nagios/eduflip.cfg:/opt/nagios/etc/conf.d/eduflip.cfg
+    networks:
+      - eduflip_net
+
 networks:
   eduflip_net:
     driver: bridge

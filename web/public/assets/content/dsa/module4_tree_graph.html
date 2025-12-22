@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modul 4: Tree & Graph</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.8;
+        color: #e2e8f0;
+        background: #0f172a;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #38bdf8;
+        border-bottom: 2px solid #1e3a5f;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #22d3ee;
+        margin-top: 2rem;
+      }
+      h3 {
+        color: #a5b4fc;
+      }
+      h4 {
+        color: #c4b5fd;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        color: #fbbf24;
+      }
+      pre {
+        background: #1e293b;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+      }
+      .highlight {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+      }
+      .tip {
+        background: #1e3a5f;
+        border-left: 4px solid #22d3ee;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🌳 Modul 4: Tree & Graph</h1>
+
+    <h2>Struktur Data Non-Linear</h2>
+    <p>
+      Berbeda dengan Array/LinkedList yang linear (satu arah), Tree dan Graph
+      adalah struktur data
+      <span class="highlight">hierarkis dan jaringan</span> yang bisa
+      merepresentasikan hubungan kompleks.
+    </p>
+
+    <h2>1. Tree (Pohon)</h2>
+    <p>
+      Tree adalah struktur hierarkis dengan satu <strong>root</strong> (akar) di
+      atas, dan <strong>children</strong> (anak) di bawahnya. Setiap node hanya
+      punya satu parent.
+    </p>
+
+    <h3>Terminologi Penting</h3>
+    <ul>
+      <li><strong>Root:</strong> Node paling atas (tidak punya parent)</li>
+      <li><strong>Parent:</strong> Node yang memiliki anak di bawahnya</li>
+      <li><strong>Child:</strong> Node yang punya parent di atasnya</li>
+      <li><strong>Leaf:</strong> Node tanpa anak (ujung pohon)</li>
+      <li><strong>Height:</strong> Jarak terpanjang dari root ke leaf</li>
+    </ul>
+
+    <h3>Visualisasi Tree</h3>
+    <pre>
+              [A]          ← Root (Depth 0)
+             /   \
+          [B]     [C]       ← Depth 1
+         / \       \
+       [D] [E]     [F]      ← Depth 2 (Leaf nodes)
+</pre
+    >
+
+    <h2>Binary Search Tree (BST)</h2>
+    <p>BST adalah binary tree dengan aturan khusus:</p>
+    <ul>
+      <li>Semua node di subtree kiri &lt; node saat ini</li>
+      <li>Semua node di subtree kanan &gt; node saat ini</li>
+    </ul>
+
+    <h3>Visualisasi BST</h3>
+    <pre>
+              [50]
+             /    \
+          [30]    [70]
+          /  \    /  \
+       [20] [40] [60] [80]
+       
+Pencarian 60:
+50 → 60 lebih besar → ke kanan
+70 → 60 lebih kecil → ke kiri
+60 → KETEMU!
+</pre
+    >
+
+    <h3>Implementasi BST (JavaScript)</h3>
+    <pre>
+class TreeNode {
+    constructor(value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class BST {
+    constructor() {
+        this.root = null;
+    }
+    
+    insert(value) {
+        const newNode = new TreeNode(value);
+        if (!this.root) {
+            this.root = newNode;
+            return;
+        }
+        
+        let current = this.root;
+        while (true) {
+            if (value &lt; current.value) {
+                if (!current.left) {
+                    current.left = newNode;
+                    return;
+                }
+                current = current.left;
+            } else {
+                if (!current.right) {
+                    current.right = newNode;
+                    return;
+                }
+                current = current.right;
+            }
+        }
+    }
+}
+</pre
+    >
+
+    <h2>Tree Traversal (Penjelajahan)</h2>
+    <p>Cara mengunjungi semua node dalam tree:</p>
+
+    <h3>Inorder (Left → Root → Right)</h3>
+    <pre>
+// Untuk BST, menghasilkan urutan sorted!
+function inorder(node) {
+    if (!node) return;
+    inorder(node.left);
+    console.log(node.value);
+    inorder(node.right);
+}
+// Output: 20, 30, 40, 50, 60, 70, 80
+</pre
+    >
+
+    <h2>2. Graph (Graf)</h2>
+    <p>
+      Graph adalah struktur data yang terdiri dari
+      <strong>vertices (node)</strong> yang terhubung oleh
+      <strong>edges (sisi)</strong>. Tidak seperti tree, graph bisa memiliki
+      <span class="highlight">siklus</span>.
+    </p>
+
+    <h3>Representasi Graph</h3>
+    <h4>Adjacency List</h4>
+    <pre>
+{
+  A: ['B', 'C'],
+  B: ['A', 'D'],
+  C: ['A', 'D'],
+  D: ['B', 'C']
+}
+</pre
+    >
+
+    <h3>BFS (Breadth-First Search)</h3>
+    <p>Menjelajah level by level menggunakan <strong>Queue</strong>.</p>
+    <pre>
+function bfs(graph, start) {
+    const visited = new Set();
+    const queue = [start];
+    
+    while (queue.length > 0) {
+        const node = queue.shift();
+        if (visited.has(node)) continue;
+        
+        console.log(node);
+        visited.add(node);
+        
+        for (const neighbor of graph[node]) {
+            if (!visited.has(neighbor)) {
+                queue.push(neighbor);
+            }
+        }
+    }
+}
+</pre
+    >
+
+    <h3>DFS (Depth-First Search)</h3>
+    <p>
+      Menjelajah sedalam mungkin dulu menggunakan <strong>Stack</strong> atau
+      <strong>Recursion</strong>.
+    </p>
+    <pre>
+function dfs(graph, node, visited = new Set()) {
+    if (visited.has(node)) return;
+    
+    console.log(node);
+    visited.add(node);
+    
+    for (const neighbor of graph[node]) {
+        dfs(graph, neighbor, visited);
+    }
+}
+</pre
+    >
+
+    <h2>Kesimpulan Modul 4</h2>
+    <ul>
+      <li>Tree adalah struktur hierarkis dengan satu root</li>
+      <li>BST memungkinkan pencarian efisien O(log n)</li>
+      <li>Graph merepresentasikan hubungan kompleks antar node</li>
+      <li>BFS (Queue) dan DFS (Stack/Recursion) untuk traversal</li>
+    </ul>
+  </body>
+</html>

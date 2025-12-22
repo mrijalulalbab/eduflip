@@ -222,8 +222,8 @@ INSERT INTO materials (course_id, title, file_type, file_path, order_sequence, p
 -- UII Course Materials (FPA001 & LP001)
 -- ========================================
 INSERT INTO materials (course_id, title, file_type, file_path, order_sequence, prerequisite_material_id) VALUES
-(5, 'Pertemuan 1: Computational Thinking 1', 'pdf', 'assets/uploads/materials/mat_6948a31066f02.pdf', 1, NULL),
-(5, 'Pertemuan 2: Computational Thinking 2', 'pdf', 'assets/uploads/materials/mat_6948a32a07b94.pdf', 2, NULL),
+(5, 'Pertemuan 1: Computational Thinking 1', 'pdf', 'assets/uploads/materials/mat_6948a2e2d3f01.pdf', 1, NULL),
+(5, 'Pertemuan 2: Computational Thinking 2', 'pdf', 'assets/uploads/materials/mat_6948a302b7b38.pdf', 2, NULL),
 (5, 'Pertemuan 3: Computational Thinking 2', 'pdf', 'assets/uploads/materials/mat_6948a33b52946.pdf', 3, NULL);
 
 -- ========================================

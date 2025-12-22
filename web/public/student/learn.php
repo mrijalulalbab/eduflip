@@ -404,7 +404,7 @@ include 'includes/header.php';
                     <div style="margin-top:2rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1);">
                         <h3 style="color:white; margin-bottom:1rem;">About this lesson</h3>
                         <div style="color:#94a3b8; line-height:1.6;">
-                            <?php echo $current_material['description'] ?: 'No description available for this video lesson.'; ?>
+                            <?php echo $current_material['description'] ?? 'No description available for this video lesson.'; ?>
                         </div>
                     </div>
                 </div>
@@ -480,7 +480,34 @@ include 'includes/header.php';
 
                     <!-- Readable Content -->
                     <div class="article-content-wrapper">
-                        <?php echo $current_material['description']; ?>
+                        <?php 
+                            // For HTML type, load external content
+                            if ($current_material['file_type'] == 'html' && !empty($current_material['file_path'])) {
+                                $htmlPath = $_SERVER['DOCUMENT_ROOT'] . $current_material['file_path'];
+                                if (file_exists($htmlPath)) {
+                                    $htmlContent = file_get_contents($htmlPath);
+                                    
+                                    // Extract and output styles
+                                    if (preg_match('/<style[^>]*>(.*?)<\/style>/is', $htmlContent, $styleMatches)) {
+                                        $css = $styleMatches[1];
+                                        // Scope body styles to the wrapper to prevent breaking main layout
+                                        $css = preg_replace('/body\s*\{/', '.article-content-wrapper {', $css);
+                                        echo "<style>" . $css . "</style>";
+                                    }
+                                    
+                                    // Extract and output body content
+                                    if (preg_match('/<body[^>]*>(.*)<\/body>/is', $htmlContent, $bodyMatches)) {
+                                        echo $bodyMatches[1];
+                                    } else {
+                                        echo '<p class="text-muted">Could not parse content.</p>';
+                                    }
+                                } else {
+                                    echo '<p class="text-muted">Content file not found: ' . htmlspecialchars($htmlPath) . '</p>';
+                                }
+                            } else {
+                                echo $current_material['description'] ?? '<p class="text-muted">No content available for this lesson.</p>';
+                            }
+                        ?>
                     </div>
 
                     <!-- Navigation -->

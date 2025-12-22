@@ -50,7 +50,7 @@ $stmt = $pdo->prepare("
     LEFT JOIN quizzes q ON c.id = q.course_id
     LEFT JOIN quiz_attempts qa ON q.id = qa.quiz_id
     WHERE c.created_by = ?
-    GROUP BY c.id
+    GROUP BY c.id, c.course_code
     ORDER BY avg_score DESC
     LIMIT 10
 ");
@@ -72,7 +72,7 @@ $stmt = $pdo->prepare("
     JOIN courses c ON q.course_id = c.id
     JOIN users u ON qa.student_id = u.id
     WHERE c.created_by = ?
-    GROUP BY u.id
+    GROUP BY u.id, u.full_name
     ORDER BY student_avg DESC
     LIMIT 5
 ");
@@ -80,7 +80,7 @@ $stmt->execute([$dosen_id]);
 $top_students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-include 'includes/header.php'; 
+include __DIR__ . '/includes/header.php'; 
 ?>
 
 <!-- Chart.js CDN -->
@@ -215,4 +215,4 @@ new Chart(ctx, {
 });
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php include __DIR__ . '/includes/footer.php'; ?>

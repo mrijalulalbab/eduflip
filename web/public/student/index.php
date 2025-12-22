@@ -57,7 +57,7 @@ $perfect_quizzes = $stmt->fetchColumn();
 // Calculate Completed Courses
 $completed_courses_count = 0;
 foreach($enrolled_courses as $c) {
-    if($c['status'] == 'completed') $completed_courses_count++;
+    if($c['enrollment_status'] == 'completed') $completed_courses_count++;
 }
 
 // Prepare Achievements Data (Subset for Dashboard)

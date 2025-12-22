@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modul 5: Sorting & Searching</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.8;
+        color: #e2e8f0;
+        background: #0f172a;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #38bdf8;
+        border-bottom: 2px solid #1e3a5f;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #22d3ee;
+        margin-top: 2rem;
+      }
+      h3 {
+        color: #a5b4fc;
+      }
+      h4 {
+        color: #c4b5fd;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        color: #fbbf24;
+      }
+      pre {
+        background: #1e293b;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+      }
+      .highlight {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+      }
+      .tip {
+        background: #1e3a5f;
+        border-left: 4px solid #22d3ee;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #334155;
+        padding: 12px;
+        text-align: center;
+      }
+      th {
+        background: #1e3a5f;
+        color: #38bdf8;
+      }
+      .good {
+        color: #22c55e;
+      }
+      .bad {
+        color: #ef4444;
+      }
+      .ok {
+        color: #fbbf24;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Modul 5: Sorting & Searching</h1>
+
+    <h2>Mengapa Sorting & Searching Penting?</h2>
+    <p>
+      Sorting (pengurutan) dan Searching (pencarian) adalah
+      <span class="highlight">operasi paling fundamental</span> dalam
+      pemrograman.
+    </p>
+
+    <h2>BAGIAN A: SEARCHING</h2>
+
+    <h3>1. Linear Search</h3>
+    <p>Cara paling sederhana: cek satu per satu dari awal sampai ketemu.</p>
+    <pre>
+function linearSearch(arr, target) {
+    for (let i = 0; i &lt; arr.length; i++) {
+        if (arr[i] === target) {
+            return i;
+        }
+    }
+    return -1;
+}
+</pre
+    >
+    <p><strong>Kompleksitas: O(n)</strong></p>
+
+    <h3>2. Binary Search</h3>
+    <p>
+      Cara cerdas: bagi dua terus sampai ketemu.
+      <strong>Syarat: data harus sudah terurut!</strong>
+    </p>
+
+    <h4>Visualisasi Binary Search</h4>
+    <pre>
+Mencari 23 dalam array [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+
+Step 1: mid=16 → 23 > 16, cari di kanan
+Step 2: mid=56 → 23 &lt; 56, cari di kiri
+Step 3: mid=23 → KETEMU!
+</pre
+    >
+
+    <pre>
+function binarySearch(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+    
+    while (left &lt;= right) {
+        const mid = Math.floor((left + right) / 2);
+        
+        if (arr[mid] === target) {
+            return mid;
+        } else if (arr[mid] &lt; target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+</pre
+    >
+    <p><strong>Kompleksitas: O(log n)</strong> - Sangat cepat!</p>
+
+    <h2>BAGIAN B: SORTING</h2>
+
+    <h3>1. Bubble Sort</h3>
+    <p>Bandingkan elemen bersebelahan, tukar jika salah urutan.</p>
+    <pre>
+function bubbleSort(arr) {
+    const n = arr.length;
+    for (let i = 0; i &lt; n - 1; i++) {
+        for (let j = 0; j &lt; n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+            }
+        }
+    }
+    return arr;
+}
+</pre
+    >
+    <p><strong>Kompleksitas: O(n²)</strong></p>
+
+    <h3>2. Merge Sort ⭐</h3>
+    <p>
+      Divide and Conquer: bagi array jadi dua, sort masing-masing, lalu
+      gabungkan.
+    </p>
+    <pre>
+function mergeSort(arr) {
+    if (arr.length &lt;= 1) return arr;
+    
+    const mid = Math.floor(arr.length / 2);
+    const left = mergeSort(arr.slice(0, mid));
+    const right = mergeSort(arr.slice(mid));
+    
+    return merge(left, right);
+}
+
+function merge(left, right) {
+    const result = [];
+    let i = 0, j = 0;
+    
+    while (i &lt; left.length && j &lt; right.length) {
+        if (left[i] &lt; right[j]) {
+            result.push(left[i++]);
+        } else {
+            result.push(right[j++]);
+        }
+    }
+    
+    return [...result, ...left.slice(i), ...right.slice(j)];
+}
+</pre
+    >
+    <p><strong>Kompleksitas: O(n log n)</strong></p>
+
+    <h2>Perbandingan Algoritma Sorting</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Algorithm</th>
+          <th>Best</th>
+          <th>Average</th>
+          <th>Worst</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Bubble Sort</td>
+          <td class="ok">O(n)</td>
+          <td class="bad">O(n²)</td>
+          <td class="bad">O(n²)</td>
+        </tr>
+        <tr>
+          <td>Merge Sort</td>
+          <td class="good">O(n log n)</td>
+          <td class="good">O(n log n)</td>
+          <td class="good">O(n log n)</td>
+        </tr>
+        <tr>
+          <td>Quick Sort</td>
+          <td class="good">O(n log n)</td>
+          <td class="good">O(n log n)</td>
+          <td class="bad">O(n²)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <strong>🎯 Rekomendasi:</strong>
+      <ul>
+        <li>Data kecil (&lt;50): Insertion Sort</li>
+        <li>General purpose: Merge Sort (stabil) atau Quick Sort (cepat)</li>
+      </ul>
+    </div>
+
+    <h2>Kesimpulan Modul 5</h2>
+    <ul>
+      <li>Linear Search O(n), Binary Search O(log n) tapi butuh sorted data</li>
+      <li>Bubble/Selection/Insertion Sort = O(n²) - untuk edukasi</li>
+      <li>Merge Sort dan Quick Sort = O(n log n) - untuk produksi</li>
+    </ul>
+
+    <div class="tip">
+      <strong>🎉 Selamat!</strong> Anda telah menyelesaikan seluruh materi
+      course Algorithms & Data Structures. Selesaikan quiz terakhir untuk
+      mendapatkan sertifikat!
+    </div>
+  </body>
+</html>

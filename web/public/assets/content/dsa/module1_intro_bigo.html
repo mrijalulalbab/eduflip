@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modul 1: Pengantar Algoritma & Notasi Big-O</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.8;
+        color: #e2e8f0;
+        background: #0f172a;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #38bdf8;
+        border-bottom: 2px solid #1e3a5f;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #22d3ee;
+        margin-top: 2rem;
+      }
+      h3 {
+        color: #a5b4fc;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        color: #fbbf24;
+      }
+      pre {
+        background: #1e293b;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+      }
+      .highlight {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+      }
+      .tip {
+        background: #1e3a5f;
+        border-left: 4px solid #22d3ee;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      .warning {
+        background: #422006;
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #334155;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #1e3a5f;
+        color: #38bdf8;
+      }
+      tr:nth-child(even) {
+        background: #1e293b;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 Modul 1: Pengantar Algoritma & Notasi Big-O</h1>
+
+    <h2>Apa itu Algoritma?</h2>
+    <p>
+      Algoritma adalah
+      <span class="highlight">serangkaian langkah-langkah terstruktur</span>
+      untuk menyelesaikan suatu masalah. Bayangkan resep masakan: ada urutan
+      langkah yang harus diikuti untuk menghasilkan hidangan yang diinginkan.
+    </p>
+
+    <div class="tip">
+      <strong>💡 Analogi Sederhana:</strong> Jika Anda ingin membuat mie instan,
+      algoritma-nya adalah: (1) Didihkan air, (2) Masukkan mie, (3) Tunggu 3
+      menit, (4) Tiriskan, (5) Campur bumbu. Setiap langkah harus dilakukan
+      dalam urutan yang benar.
+    </div>
+
+    <h2>Mengapa Kita Perlu Menganalisis Algoritma?</h2>
+    <p>
+      Tidak semua algoritma diciptakan sama. Ada yang cepat, ada yang lambat.
+      Ada yang hemat memori, ada yang boros. Sebagai programmer, kita perlu tahu
+      <strong>seberapa efisien</strong> algoritma kita.
+    </p>
+
+    <p>Contoh: Mencari nama di buku telepon.</p>
+    <ul>
+      <li>
+        <strong>Cara Bodoh:</strong> Buka halaman 1, cek satu per satu sampai
+        ketemu. (Linear Search)
+      </li>
+      <li>
+        <strong>Cara Pintar:</strong> Buka di tengah, lihat hurufnya, lalu pilih
+        setengah yang relevan. Ulangi. (Binary Search)
+      </li>
+    </ul>
+
+    <h2>Notasi Big-O: Bahasa Universal Efisiensi</h2>
+    <p>
+      Big-O adalah cara kita
+      <span class="highlight">mengukur kompleksitas waktu</span> sebuah
+      algoritma. Ia menunjukkan bagaimana waktu eksekusi bertambah seiring
+      bertambahnya input.
+    </p>
+
+    <h3>Notasi Big-O yang Paling Umum</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Notasi</th>
+          <th>Nama</th>
+          <th>Contoh</th>
+          <th>Kecepatan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>O(1)</code></td>
+          <td>Constant</td>
+          <td>Akses elemen array by index</td>
+          <td>⚡ Sangat Cepat</td>
+        </tr>
+        <tr>
+          <td><code>O(log n)</code></td>
+          <td>Logarithmic</td>
+          <td>Binary Search</td>
+          <td>🚀 Cepat</td>
+        </tr>
+        <tr>
+          <td><code>O(n)</code></td>
+          <td>Linear</td>
+          <td>Looping seluruh array</td>
+          <td>🚗 Wajar</td>
+        </tr>
+        <tr>
+          <td><code>O(n log n)</code></td>
+          <td>Linearithmic</td>
+          <td>Merge Sort, Quick Sort</td>
+          <td>🚗 Lumayan</td>
+        </tr>
+        <tr>
+          <td><code>O(n²)</code></td>
+          <td>Quadratic</td>
+          <td>Nested Loop (Bubble Sort)</td>
+          <td>🐢 Lambat</td>
+        </tr>
+        <tr>
+          <td><code>O(2ⁿ)</code></td>
+          <td>Exponential</td>
+          <td>Brute-force subset</td>
+          <td>🐌 Sangat Lambat</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Visualisasi Pertumbuhan</h3>
+    <pre>
+Input (n)     O(1)    O(log n)   O(n)     O(n²)
+-------------------------------------------------
+10            1       3          10       100
+100           1       7          100      10,000
+1000          1       10         1000     1,000,000
+10000         1       13         10000    100,000,000
+</pre
+    >
+
+    <div class="warning">
+      <strong>⚠️ Perhatian:</strong> Algoritma O(n²) mungkin terasa cepat saat
+      data sedikit, tapi akan <em>meledak</em> saat data membesar. Selalu
+      pikirkan skalabilitas!
+    </div>
+
+    <h2>Contoh Kode: Menghitung Big-O</h2>
+
+    <h3>1. O(1) - Constant Time</h3>
+    <pre>
+function getFirst(arr) {
+    return arr[0]; // Selalu 1 operasi, tidak peduli ukuran array
+}
+</pre
+    >
+
+    <h3>2. O(n) - Linear Time</h3>
+    <pre>
+function printAll(arr) {
+    for (let i = 0; i &lt; arr.length; i++) {
+        console.log(arr[i]); // Operasi bertambah seiring n
+    }
+}
+</pre
+    >
+
+    <h3>3. O(n²) - Quadratic Time</h3>
+    <pre>
+function printPairs(arr) {
+    for (let i = 0; i &lt; arr.length; i++) {
+        for (let j = 0; j &lt; arr.length; j++) {
+            console.log(arr[i], arr[j]); // Loop dalam loop = n * n
+        }
+    }
+}
+</pre
+    >
+
+    <h2>Kesimpulan Modul 1</h2>
+    <ul>
+      <li>
+        Algoritma adalah resep langkah-langkah untuk menyelesaikan masalah.
+      </li>
+      <li>Big-O mengukur <strong>efisiensi waktu</strong> algoritma.</li>
+      <li>Semakin kecil Big-O (O(1) &gt; O(log n) &gt; O(n)), semakin baik.</li>
+      <li>Hindari O(n²) atau lebih buruk untuk data besar.</li>
+    </ul>
+
+    <div class="tip">
+      <strong>🎯 Tugas Anda:</strong> Selesaikan Quiz Modul 1 untuk menguji
+      pemahaman Anda tentang Big-O!
+    </div>
+  </body>
+</html>

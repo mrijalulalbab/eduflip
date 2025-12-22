@@ -1,16 +1,10 @@
 <?php 
 require_once '../../includes/config.php';
-require_once '../../includes/admin.php'; // ensure admin functions loaded
-require_once '../../includes/courses.php'; // reuse createCourse
-
-include 'includes/header.php'; 
+require_once '../../includes/admin.php';
+require_once '../../includes/courses.php';
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Admin Creating Course
-    // We might want to allow assigning an instructor, but for MVP let's assign to self or specific Dosen ID if we had a dropdown.
-    // For now, assigning to CURRENT USER (Admin) as Creator.
-    
     // Handle Thumbnail
     $thumbnailPath = '';
     if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
@@ -37,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'thumbnail' => $thumbnailPath
     ];
     
-    // Call the shared createCourse function
     $result = createCourse($_SESSION['user_id'], $data);
     
     if ($result['success']) {
@@ -47,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = $result['message'];
     }
 }
+
+// Include header AFTER redirect logic to avoid "headers already sent" error
+include 'includes/header.php'; 
 ?>
 
 <div class="reveal-element">

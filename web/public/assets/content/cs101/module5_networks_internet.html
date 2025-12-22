@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modul 5: Jaringan dan Internet</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.8;
+        color: #e2e8f0;
+        background: #0f172a;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #38bdf8;
+        border-bottom: 2px solid #1e3a5f;
+        padding-bottom: 0.5rem;
+      }
+      h2 {
+        color: #22d3ee;
+        margin-top: 2rem;
+      }
+      h3 {
+        color: #a5b4fc;
+      }
+      code {
+        background: #1e293b;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Fira Code", monospace;
+        color: #fbbf24;
+      }
+      pre {
+        background: #1e293b;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #3b82f6;
+      }
+      .highlight {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: bold;
+      }
+      .tip {
+        background: #1e3a5f;
+        border-left: 4px solid #22d3ee;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      .warning {
+        background: #422006;
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #334155;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background: #1e3a5f;
+        color: #38bdf8;
+      }
+      tr:nth-child(even) {
+        background: #1e293b;
+      }
+      ul,
+      ol {
+        padding-left: 1.5rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+      .diagram {
+        background: #1e293b;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        margin: 1.5rem 0;
+        font-family: monospace;
+        white-space: pre;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🌐 Modul 5: Jaringan dan Internet</h1>
+
+    <h2>Apa Itu Jaringan Komputer?</h2>
+    <p>
+      <span class="highlight">Jaringan komputer</span> adalah sekumpulan
+      perangkat yang terhubung satu sama lain untuk berbagi data dan sumber
+      daya. Jaringan memungkinkan komputer Anda berkomunikasi dengan jutaan
+      komputer lain di seluruh dunia!
+    </p>
+
+    <h3>Jenis-Jenis Jaringan</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Jenis</th>
+          <th>Cakupan</th>
+          <th>Contoh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PAN (Personal Area Network)</td>
+          <td>Beberapa meter</td>
+          <td>Bluetooth headset ke HP</td>
+        </tr>
+        <tr>
+          <td>LAN (Local Area Network)</td>
+          <td>Gedung/kampus</td>
+          <td>WiFi kantor, lab komputer</td>
+        </tr>
+        <tr>
+          <td>MAN (Metropolitan Area Network)</td>
+          <td>Kota</td>
+          <td>Jaringan antar kampus</td>
+        </tr>
+        <tr>
+          <td>WAN (Wide Area Network)</td>
+          <td>Negara/dunia</td>
+          <td>Internet!</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Komponen Jaringan</h2>
+
+    <h3>Perangkat Keras (Hardware)</h3>
+    <ul>
+      <li><strong>Router</strong>: Mengarahkan data antar jaringan berbeda</li>
+      <li>
+        <strong>Switch</strong>: Menghubungkan perangkat dalam satu jaringan
+      </li>
+      <li>
+        <strong>Modem</strong>: Mengubah sinyal digital ke analog (dan
+        sebaliknya)
+      </li>
+      <li><strong>Access Point</strong>: Menyediakan koneksi WiFi</li>
+      <li>
+        <strong>Network Interface Card (NIC)</strong>: Kartu jaringan di
+        komputer
+      </li>
+    </ul>
+
+    <h3>Media Transmisi</h3>
+    <ul>
+      <li>
+        <strong>Kabel Ethernet (UTP/STP)</strong>: Kabel tembaga twisted pair
+      </li>
+      <li><strong>Fiber Optic</strong>: Kabel serat optik, sangat cepat</li>
+      <li><strong>Wireless (WiFi)</strong>: Gelombang radio</li>
+      <li><strong>Satelit</strong>: Untuk area terpencil</li>
+    </ul>
+
+    <h2>Alamat IP dan DNS</h2>
+
+    <h3>IP Address</h3>
+    <p>
+      Setiap perangkat di jaringan memiliki <strong>alamat IP</strong> yang
+      unik, seperti alamat rumah untuk surat.
+    </p>
+
+    <pre>
+IPv4 (32-bit):
+Format: xxx.xxx.xxx.xxx
+Contoh: 192.168.1.1
+
+IPv6 (128-bit):
+Format: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx
+Contoh: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+    </pre>
+
+    <div class="tip">
+      <strong>💡 IP Khusus:</strong>
+      <ul>
+        <li><code>127.0.0.1</code> - Localhost (komputer sendiri)</li>
+        <li><code>192.168.x.x</code> - IP private (jaringan lokal)</li>
+        <li><code>8.8.8.8</code> - Google DNS Server</li>
+      </ul>
+    </div>
+
+    <h3>DNS (Domain Name System)</h3>
+    <p>
+      Manusia sulit mengingat angka seperti <code>142.250.190.14</code>. DNS
+      adalah sistem yang menerjemahkan nama domain menjadi IP address:
+    </p>
+
+    <div class="diagram">
+      Anda ketik: google.com │ ▼ ╔═══════════════╗ ║ DNS Server ║
+      ╚═══════╤═══════╝ │ ▼ Hasil: 142.250.190.14
+    </div>
+
+    <pre>
+Proses DNS Lookup:
+1. Browser bertanya ke DNS Resolver lokal
+2. Jika tidak tahu, tanya Root DNS Server
+3. Root arahkan ke TLD Server (.com, .org, dll)
+4. TLD arahkan ke Authoritative DNS
+5. Dapat IP address, simpan di cache
+    </pre>
+
+    <h2>Bagaimana Internet Bekerja?</h2>
+
+    <h3>Model OSI (7 Layers)</h3>
+    <p>
+      OSI Model menjelaskan bagaimana data bergerak dari aplikasi ke kabel
+      fisik:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Nama</th>
+          <th>Fungsi</th>
+          <th>Contoh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>7</td>
+          <td>Application</td>
+          <td>Interface ke user</td>
+          <td>HTTP, FTP, SMTP</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Presentation</td>
+          <td>Enkripsi, kompresi</td>
+          <td>SSL/TLS, JPEG</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Session</td>
+          <td>Mengelola koneksi</td>
+          <td>NetBIOS</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Transport</td>
+          <td>Reliable delivery</td>
+          <td>TCP, UDP</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Network</td>
+          <td>Routing antar jaringan</td>
+          <td>IP, ICMP</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Data Link</td>
+          <td>Transfer dalam network</td>
+          <td>Ethernet, WiFi</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Physical</td>
+          <td>Sinyal fisik</td>
+          <td>Kabel, radio</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>TCP/IP: Protokol Internet</h3>
+    <p>
+      <strong>TCP (Transmission Control Protocol)</strong> memastikan data
+      sampai dengan benar dan lengkap.
+    </p>
+
+    <div class="diagram">
+      Komputer A Komputer B │ │ │──── SYN (Mau kirim data) ───────────▶│ │ │
+      │◀─── SYN-ACK (Oke, siap) ─────────────│ │ │ │──── ACK (Mulai kirim)
+      ──────────────▶│ │ │ │◀───────── Data Packets ─────────────▶│ │ │
+    </div>
+
+    <h2>HTTP dan Web</h2>
+
+    <h3>URL (Uniform Resource Locator)</h3>
+    <pre>
+https://www.eduflip.local:80/student/dashboard.php?page=1#section2
+└─┬──┘ └──────┬───────┘ └┬┘ └──────────┬────────┘ └──┬──┘ └───┬───┘
+Scheme    Host        Port      Path          Query   Fragment
+    </pre>
+
+    <h3>HTTP Methods</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Fungsi</th>
+          <th>Contoh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td>Mengambil data</td>
+          <td>Membuka halaman web</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td>Mengirim data</td>
+          <td>Submit form login</td>
+        </tr>
+        <tr>
+          <td><code>PUT</code></td>
+          <td>Update data</td>
+          <td>Edit profil</td>
+        </tr>
+        <tr>
+          <td><code>DELETE</code></td>
+          <td>Hapus data</td>
+          <td>Hapus posting</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>HTTP Status Codes</h3>
+    <ul>
+      <li><strong>200 OK</strong> - Berhasil</li>
+      <li><strong>301 Moved Permanently</strong> - Redirect permanen</li>
+      <li><strong>404 Not Found</strong> - Halaman tidak ditemukan</li>
+      <li><strong>500 Internal Server Error</strong> - Error di server</li>
+    </ul>
+
+    <h2>Keamanan Jaringan</h2>
+
+    <h3>Ancaman Umum</h3>
+    <ul>
+      <li><strong>Malware</strong>: Virus, worm, trojan</li>
+      <li><strong>Phishing</strong>: Email/situs palsu untuk mencuri data</li>
+      <li><strong>DDoS</strong>: Serangan membanjiri server</li>
+      <li><strong>Man-in-the-Middle</strong>: Penyadapan komunikasi</li>
+    </ul>
+
+    <h3>Perlindungan</h3>
+    <ul>
+      <li>
+        <strong>HTTPS</strong>: Enkripsi komunikasi web (lihat 🔒 di browser)
+      </li>
+      <li><strong>Firewall</strong>: Menyaring traffic masuk/keluar</li>
+      <li><strong>VPN</strong>: Mengenkripsi seluruh koneksi internet</li>
+      <li><strong>Password kuat</strong>: Kombinasi huruf, angka, simbol</li>
+    </ul>
+
+    <div class="warning">
+      <strong>⚠️ Tips Keamanan:</strong>
+      <ul>
+        <li>Selalu gunakan HTTPS saat memasukkan data sensitif</li>
+        <li>Jangan klik link mencurigakan di email</li>
+        <li>Update software secara berkala</li>
+        <li>Gunakan 2FA (Two-Factor Authentication)</li>
+      </ul>
+    </div>
+
+    <h2>Kesimpulan Modul 5</h2>
+    <ul>
+      <li>Jaringan menghubungkan komputer untuk berbagi data.</li>
+      <li>IP address adalah alamat unik setiap perangkat.</li>
+      <li>DNS menerjemahkan nama domain ke IP address.</li>
+      <li>HTTP adalah protokol web, HTTPS versi amannya.</li>
+      <li>Keamanan jaringan sangat penting di era digital.</li>
+    </ul>
+
+    <div class="tip">
+      <strong>🎯 Selamat!</strong> Anda telah menyelesaikan seluruh modul Intro
+      to Computer Science! Lanjutkan dengan mengerjakan quiz untuk menguji
+      pemahaman Anda.
+    </div>
+  </body>
+</html>

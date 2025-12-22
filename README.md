@@ -18,14 +18,16 @@ EduFlip adalah aplikasi web berbasis **Flipped Classroom** yang dirancang untuk 
 - **Frontend**: HTML5, CSS3
 - **Infrastructure**: Docker & Docker Compose
 - **DNS Server**: BIND9
+- **Monitoring**: Nagios
 
 ### Arsitektur Container
 
-Sistem berjalan di atas 3 container terpisah yang terhubung via virtual network `eduflip_net`:
+Sistem berjalan di atas **4 container** terpisah yang terhubung via virtual network `eduflip_net`:
 
-1. **eduflip_web**: Web Server (Apache + PHP)
-2. **eduflip_db**: Database Server (MySQL)
-3. **eduflip_dns**: DNS Server (BIND9)
+1. **eduflip_web**: Web Server (Apache + PHP) - Port 80
+2. **eduflip_db**: Database Server (MySQL) - Port 3306
+3. **eduflip_dns**: DNS Server (BIND9) - Port 53
+4. **eduflip_nagios**: Monitoring Server (Nagios) - Port 8080
 
 ## 🚀 Cara Instalasi & Menjalankan (Docker)
 
@@ -45,7 +47,7 @@ Tunggu hingga proses build selesai.
 
 ### 2. Cek Status Container
 
-Pastikan ketiga container (web, db, dns) statusnya **Up**:
+Pastikan keempat container (web, db, dns, nagios) statusnya **Up**:
 
 ```bash
 docker-compose ps
@@ -67,14 +69,16 @@ Edit file `C:\Windows\System32\drivers\etc\hosts` (Run as Administrator), tambah
 ### 4. Akses Aplikasi
 
 Buka browser dan kunjungi:
-👉 **[http://eduflip.local](http://eduflip.local)**
+
+- 👉 **Web App**: [http://eduflip.local](http://eduflip.local)
+- 👉 **Monitoring**: [http://localhost:8080](http://localhost:8080) (User: `nagiosadmin`)
 
 ## 🔑 Akun Default (Untuk Pengujian)
 
-| Role          | Email                 | Password   |
-| :------------ | :-------------------- | :--------- |
-| **Admin**     | `admin@eduflip.com`   | `password` |
-| **Dosen**     | `dosen@eduflip.com`   | `password` |
-| **Mahasiswa** | `student@eduflip.com` | `password` |
+| Role          | Email                     | Password   |
+| :------------ | :------------------------ | :--------- |
+| **Admin**     | `admin@eduflip.local`     | `password` |
+| **Dosen**     | `dosen@eduflip.local`     | `password` |
+| **Mahasiswa** | `mahasiswa@eduflip.local` | `password` |
 
 ---

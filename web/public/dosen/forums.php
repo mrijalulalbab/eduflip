@@ -85,7 +85,7 @@ include 'includes/header.php';
                                 <div style="display: flex; gap: 1.5rem; color: var(--text-muted); font-size: 0.85rem;">
                                     <span><i class="ri-user-line"></i> <?php echo htmlspecialchars($thread['author_name']); ?></span>
                                     <span><i class="ri-message-3-line"></i> <?php echo $thread['reply_count']; ?> Replies</span>
-                                    <span><i class="ri-eye-line"></i> <?php echo $thread['view_count']; ?> Views</span>
+                                    <span><i class="ri-eye-line"></i> <?php echo $thread['views']; ?> Views</span>
                                 </div>
                             </div>
                             
