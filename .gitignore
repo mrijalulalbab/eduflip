@@ -29,3 +29,6 @@ error_log
 # Brain artifacts
 .gemini/
 .antigravity/
+
+# Documentation (Drafts)
+docs/
