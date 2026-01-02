@@ -193,9 +193,11 @@ function markMaterialComplete($student_id, $material_id) {
     global $pdo;
     
     // Check if already completed
-    $stmt = $pdo->prepare("SELECT id FROM student_material_progress WHERE student_id = ? AND material_id = ?");
+    $stmt = $pdo->prepare("SELECT id, status FROM student_material_progress WHERE student_id = ? AND material_id = ?");
     $stmt->execute([$student_id, $material_id]);
-    $exists = $stmt->fetch();
+    $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $wasAlreadyCompleted = $exists && $exists['status'] === 'completed';
     
     if ($exists) {
         $sql = "UPDATE student_material_progress SET status = 'completed', completed_at = NOW() WHERE id = ?";
@@ -204,6 +206,12 @@ function markMaterialComplete($student_id, $material_id) {
     } else {
         $sql = "INSERT INTO student_material_progress (student_id, material_id, status, completed_at) VALUES (?, ?, 'completed', NOW())";
         $pdo->prepare($sql)->execute([$student_id, $material_id]);
+    }
+    
+    // Record activity for gamification (only if just completed)
+    if (!$wasAlreadyCompleted) {
+        require_once __DIR__ . '/gamification.php';
+        recordDailyActivity($student_id, 'material');
     }
 }
 

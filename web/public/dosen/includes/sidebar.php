@@ -37,10 +37,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
         
         <div style="flex:1"></div>
         
-        <a href="../logout.php" class="nav-item" style="color: #ef4444;">
-            <i class="ri-logout-box-r-line"></i>
-            <span>Logout</span>
-        </a>
+        <div style="padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 0.25rem;">
+            <a href="settings.php" class="nav-item <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
+                <i class="ri-settings-4-line"></i>
+                <span>Settings</span>
+            </a>
+            <a href="../logout.php" class="nav-item" style="color: #ef4444;">
+                <i class="ri-logout-box-r-line"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </nav>
     
 

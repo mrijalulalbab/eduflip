@@ -7,6 +7,18 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'dosen') {
     header('Location: ../login.php');
     exit;
 }
+
+// CRITICAL: Verify account status is 'active' (not pending/suspended)
+$stmt = $pdo->prepare("SELECT status FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$userStatus = $stmt->fetchColumn();
+
+if ($userStatus !== 'active') {
+    // Destroy session and redirect to pending page
+    session_destroy();
+    header('Location: ../pending.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

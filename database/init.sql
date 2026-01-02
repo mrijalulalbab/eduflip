@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('mahasiswa', 'dosen', 'admin') DEFAULT 'mahasiswa',
     status ENUM('active', 'pending', 'suspended') DEFAULT 'active',
+    gemini_api_key VARCHAR(255) DEFAULT NULL,
     last_login DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -165,6 +166,29 @@ CREATE TABLE IF NOT EXISTS certificates (
     issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- 14. Table: learning_activity (Track daily activity for streak calculation)
+CREATE TABLE IF NOT EXISTS learning_activity (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    activity_date DATE NOT NULL,
+    materials_viewed INT DEFAULT 0,
+    quizzes_taken INT DEFAULT 0,
+    forum_posts INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_daily_activity (student_id, activity_date)
+);
+
+-- 15. Table: student_badges (Store earned badges)
+CREATE TABLE IF NOT EXISTS student_badges (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    badge_code VARCHAR(50) NOT NULL,
+    earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_badge (student_id, badge_code)
 );
 
 

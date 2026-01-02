@@ -4,6 +4,7 @@ require_once '../../includes/auth.php';
 require_once '../../includes/courses.php';
 require_once '../../includes/quizzes.php';
 require_once '../../includes/certificates.php';
+require_once '../../includes/gamification.php';
 
 // Auth Check
 if (!isLoggedIn() || $_SESSION['role'] !== 'mahasiswa') {
@@ -48,49 +49,28 @@ foreach ($all_quizzes as $q) {
     }
 }
 
-// Achievements Logic (Added for Dashboard Widget)
-// Calculate Perfect Quizzes for "Quiz Master"
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM quiz_attempts WHERE student_id = ? AND score >= 100");
-$stmt->execute([$_SESSION['user_id']]);
-$perfect_quizzes = $stmt->fetchColumn();
+// === GAMIFICATION DATA ===
+$gamification = getGamificationData($_SESSION['user_id']);
+$streak = $gamification['streak'];
+$earnedBadges = $gamification['badges'];
+$allBadges = $gamification['badge_definitions'];
+$earnedCodes = array_column($earnedBadges, 'badge_code');
 
-// Calculate Completed Courses
-$completed_courses_count = 0;
-foreach($enrolled_courses as $c) {
-    if($c['enrollment_status'] == 'completed') $completed_courses_count++;
+// Trigger badge check on dashboard load (awards first_login if not earned)
+checkAndAwardBadges($_SESSION['user_id']);
+
+// Prepare badges for display (show earned first, then locked)
+$badges_display = [];
+foreach ($allBadges as $code => $badge) {
+    $badges_display[] = [
+        'code' => $code,
+        'name' => $badge['name'],
+        'description' => $badge['description'],
+        'icon' => $badge['icon'],
+        'color' => $badge['color'],
+        'unlocked' => in_array($code, $earnedCodes)
+    ];
 }
-
-// Prepare Achievements Data (Subset for Dashboard)
-$achievements_widget = [
-    [
-        'title' => 'Early Bird',
-        'desc' => 'Joined Early Access',
-        'icon' => 'ri-alarm-line',
-        'color' => 'from-pink-500 to-rose-500',
-        'unlocked' => true
-    ],
-    [
-        'title' => 'First Steps',
-        'desc' => 'Enrolled in a course',
-        'icon' => 'ri-footprint-line',
-        'color' => 'from-blue-400 to-cyan-400',
-        'unlocked' => count($enrolled_courses) > 0
-    ],
-    [
-        'title' => 'Quiz Master',
-        'desc' => 'Score 100% on a quiz',
-        'icon' => 'ri-trophy-line',
-        'color' => 'from-yellow-400 to-orange-500',
-        'unlocked' => $perfect_quizzes > 0
-    ],
-    [
-        'title' => 'Course Champion',
-        'desc' => 'Complete a course',
-        'icon' => 'ri-medal-fill',
-        'color' => 'from-emerald-400 to-green-500',
-        'unlocked' => $completed_courses_count > 0
-    ]
-];
 
 include 'includes/header.php'; 
 ?>
@@ -102,6 +82,17 @@ include 'includes/header.php';
 
 <!-- Stats -->
 <div class="stats-container reveal-element" style="margin-top: 2rem;">
+    <!-- Streak Counter -->
+    <div class="stat-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(249, 115, 22, 0.1)); border: 1px solid rgba(239, 68, 68, 0.2);">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #f97316);">
+            <i class="ri-fire-fill"></i>
+        </div>
+        <div class="stat-info">
+            <h3><?php echo $streak; ?></h3>
+            <p>Day Streak 🔥</p>
+        </div>
+    </div>
+    
     <div class="stat-card">
         <div class="stat-icon blue">
             <i class="ri-book-open-line"></i>
@@ -134,27 +125,65 @@ include 'includes/header.php';
     </div>
 </div>
 
-<!-- Achievements Banner -->
+<!-- Badges Section - Clean Design -->
 <div class="reveal-element" style="margin-top: 2rem;">
-    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-        <span>Recent Achievements 🏆</span>
-        <a href="achievements.php" style="font-size: 0.9rem; color: var(--color-primary); text-decoration: none;">View All</a>
-    </h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-        <?php foreach($achievements_widget as $badge): ?>
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; position: relative; overflow: hidden;" class="<?php echo $badge['unlocked'] ? '' : 'opacity-50 grayscale'; ?>">
-                <!-- Glow Effect -->
-                <?php if($badge['unlocked']): ?>
-                    <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); pointer-events: none;"></div>
-                <?php endif; ?>
-
-                <div class="bg-gradient-to-br <?php echo $badge['color']; ?>" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); flex-shrink: 0;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-award-fill" style="color: #fbbf24;"></i> Your Badges
+        </h2>
+        <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #fbbf24;">
+            <?php echo count($earnedBadges); ?> / <?php echo count($allBadges); ?> Unlocked
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+        <?php foreach($badges_display as $badge): ?>
+            <div style="
+                background: <?php echo $badge['unlocked'] ? 'linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))' : 'rgba(30,30,40,0.3)'; ?>;
+                border: 1px solid <?php echo $badge['unlocked'] ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.03)'; ?>;
+                border-radius: 16px;
+                padding: 1.25rem;
+                text-align: center;
+                transition: all 0.3s ease;
+                position: relative;
+                <?php echo $badge['unlocked'] ? '' : 'filter: grayscale(1); opacity: 0.5;'; ?>
+            " <?php echo $badge['unlocked'] ? 'onmouseover="this.style.transform=\'translateY(-4px)\'; this.style.boxShadow=\'0 12px 24px rgba(0,0,0,0.3)\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'none\';"' : ''; ?>>
+                
+                <!-- Badge Icon -->
+                <div style="
+                    width: 56px;
+                    height: 56px;
+                    margin: 0 auto 0.75rem;
+                    border-radius: 50%;
+                    background: <?php echo $badge['unlocked'] ? $badge['color'] : '#374151'; ?>;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: <?php echo $badge['unlocked'] ? '0 8px 20px ' . $badge['color'] . '40' : 'none'; ?>;
+                ">
                     <i class="<?php echo $badge['icon']; ?>" style="font-size: 1.5rem; color: white;"></i>
                 </div>
-                <div>
-                    <h4 style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; color: <?php echo $badge['unlocked'] ? 'white' : '#9ca3af'; ?>"><?php echo $badge['title']; ?></h4>
-                    <p style="font-size: 0.75rem; color: #9ca3af; line-height: 1.2;"><?php echo $badge['desc']; ?></p>
-                </div>
+                
+                <!-- Badge Name -->
+                <h4 style="font-weight: 700; font-size: 0.9rem; margin: 0 0 0.25rem 0; color: <?php echo $badge['unlocked'] ? 'white' : '#6b7280'; ?>;">
+                    <?php echo $badge['name']; ?>
+                </h4>
+                
+                <!-- Badge Description -->
+                <p style="font-size: 0.7rem; color: #9ca3af; margin: 0; line-height: 1.3;">
+                    <?php echo $badge['description']; ?>
+                </p>
+                
+                <!-- Unlocked Checkmark -->
+                <?php if($badge['unlocked']): ?>
+                    <div style="position: absolute; top: 8px; right: 8px; background: #22c55e; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="ri-check-line" style="color: white; font-size: 0.7rem; font-weight: bold;"></i>
+                    </div>
+                <?php else: ?>
+                    <div style="position: absolute; top: 8px; right: 8px; background: rgba(100,100,100,0.3); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="ri-lock-2-line" style="color: #6b7280; font-size: 0.65rem;"></i>
+                    </div>
+                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     </div>

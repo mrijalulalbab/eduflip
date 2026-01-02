@@ -2,8 +2,8 @@
 require_once '../../includes/config.php';
 require_once '../../includes/auth.php';
 
-// Auth Check
-if (!isLoggedIn() || $_SESSION['role'] !== 'mahasiswa') {
+// Auth Check - Dosen only
+if (!isLoggedIn() || $_SESSION['role'] !== 'dosen') {
     header('Location: ../login.php');
     exit;
 }
@@ -14,7 +14,6 @@ $user = getUserById($_SESSION['user_id']);
 // Handle form submissions
 $profileMsg = null;
 $passwordMsg = null;
-$apiKeyMsg = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_profile'])) {
@@ -32,11 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['confirm_password'] ?? ''
         );
         $passwordMsg = $result;
-    }
-    
-    if (isset($_POST['update_api_key'])) {
-        $result = updateApiKey($_SESSION['user_id'], $_POST['gemini_api_key'] ?? '');
-        $apiKeyMsg = $result;
     }
 }
 
@@ -71,7 +65,7 @@ include 'includes/header.php';
     }
     
     .settings-card h3 i {
-        color: var(--color-primary);
+        color: var(--color-primary, #3b82f6);
     }
     
     .form-group {
@@ -99,7 +93,7 @@ include 'includes/header.php';
     
     .form-group input:focus {
         outline: none;
-        border-color: var(--color-primary);
+        border-color: #3b82f6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
     
@@ -160,7 +154,7 @@ include 'includes/header.php';
         width: 80px;
         height: 80px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        background: linear-gradient(135deg, #8b5cf6, #a855f7);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -185,11 +179,11 @@ include 'includes/header.php';
     .profile-badge {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        background: rgba(34, 197, 94, 0.15);
-        border: 1px solid rgba(34, 197, 94, 0.3);
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid rgba(139, 92, 246, 0.3);
         border-radius: 20px;
         font-size: 0.75rem;
-        color: #22c55e;
+        color: #a855f7;
         font-weight: 600;
         margin-top: 0.5rem;
     }
@@ -223,13 +217,13 @@ include 'includes/header.php';
 </style>
 
 <div class="settings-container">
-    <div class="welcome-text reveal-element">
-        <h1 style="line-height: 1.2;">Account Settings</h1>
-        <p class="text-muted">Manage your profile and security preferences</p>
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.75rem; font-weight: 700; margin: 0 0 0.5rem 0;">Account Settings</h1>
+        <p style="color: #9ca3af; margin: 0;">Manage your profile and security preferences</p>
     </div>
     
     <!-- Profile Overview Card -->
-    <div class="settings-card reveal-element">
+    <div class="settings-card">
         <div class="profile-header">
             <div class="profile-avatar">
                 <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
@@ -238,15 +232,17 @@ include 'includes/header.php';
                 <h2><?php echo htmlspecialchars($user['full_name']); ?></h2>
                 <p><?php echo htmlspecialchars($user['email']); ?></p>
                 <span class="profile-badge">
-                    <i class="ri-checkbox-circle-fill"></i> <?php echo ucfirst($user['status']); ?> Account
+                    <i class="ri-user-star-fill"></i> Lecturer
                 </span>
             </div>
         </div>
         
         <div class="account-meta">
             <div class="meta-item">
-                <div class="label">Role</div>
-                <div class="value"><?php echo ucfirst($user['role']); ?></div>
+                <div class="label">Account Status</div>
+                <div class="value" style="color: <?php echo $user['status'] === 'active' ? '#22c55e' : '#f59e0b'; ?>;">
+                    <?php echo ucfirst($user['status']); ?>
+                </div>
             </div>
             <div class="meta-item">
                 <div class="label">Member Since</div>
@@ -256,7 +252,7 @@ include 'includes/header.php';
     </div>
     
     <!-- Edit Profile Card -->
-    <div class="settings-card reveal-element">
+    <div class="settings-card">
         <h3><i class="ri-user-line"></i> Edit Profile</h3>
         
         <?php if ($profileMsg): ?>
@@ -284,36 +280,8 @@ include 'includes/header.php';
         </form>
     </div>
     
-    <!-- Gemini API Key Card -->
-    <div class="settings-card reveal-element">
-        <h3><i class="ri-robot-2-line"></i> AI Chatbot Key</h3>
-        
-        <?php if ($apiKeyMsg): ?>
-            <div class="alert <?php echo $apiKeyMsg['success'] ? 'alert-success' : 'alert-error'; ?>">
-                <i class="<?php echo $apiKeyMsg['success'] ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill'; ?>"></i>
-                <?php echo $apiKeyMsg['message']; ?>
-            </div>
-        <?php endif; ?>
-        
-        <form method="POST">
-            <div class="alert" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: #93c5fd;">
-                <i class="ri-information-line"></i>
-                To enable the AI chatbot, get a free API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: white; text-decoration: underline;">Google AI Studio</a>.
-            </div>
-            
-            <div class="form-group">
-                <label>Gemini API Key</label>
-                <input type="password" name="gemini_api_key" value="<?php echo htmlspecialchars($user['gemini_api_key'] ?? ''); ?>" placeholder="Paste your API key here (starts with AIza...)" required>
-            </div>
-            
-            <button type="submit" name="update_api_key" class="btn-save">
-                <i class="ri-key-2-line"></i> Save API Key
-            </button>
-        </form>
-    </div>
-
     <!-- Change Password Card -->
-    <div class="settings-card reveal-element">
+    <div class="settings-card">
         <h3><i class="ri-lock-line"></i> Change Password</h3>
         
         <?php if ($passwordMsg): ?>

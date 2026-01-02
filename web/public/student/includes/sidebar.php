@@ -31,6 +31,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <i class="ri-medal-line"></i>
             <span>Achievements</span>
         </a>
+        <a href="practice.php" class="nav-item <?php echo $current_page == 'practice.php' ? 'active' : ''; ?>">
+            <i class="ri-code-s-slash-line"></i>
+            <span>Practice Coding</span>
+        </a>
         
         <div style="flex: 1;"></div> <!-- Spacer -->
         

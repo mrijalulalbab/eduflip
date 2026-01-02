@@ -272,7 +272,6 @@
         
         if (isHidden) {
             window.classList.remove('hidden');
-            // Small delay for animation
             requestAnimationFrame(() => window.classList.add('visible'));
             btn.innerHTML = '<i class="ri-close-line"></i>';
         } else {
@@ -282,7 +281,7 @@
         }
     }
 
-    function handleChatSubmit(e) {
+    async function handleChatSubmit(e) {
         e.preventDefault();
         const input = document.getElementById('chat-input');
         const msg = input.value.trim();
@@ -292,15 +291,36 @@
         addMessage(msg, 'user');
         input.value = '';
 
-        // Simulate AI Typing
+        // AI Thinking
         const loadingId = addLoading();
         
-        // Mock Response
-        setTimeout(() => {
+        try {
+            const response = await fetch('/student/api/chat.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            
             removeLoading(loadingId);
-            const response = getMockAIResponse(msg);
-            addMessage(response, 'ai');
-        }, 1500);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Simple formatting for bold and newlines
+                let reply = data.reply
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+                addMessage(reply, 'ai');
+            } else {
+                addMessage("⚠️ " + data.message, 'ai');
+                if (data.message.includes("API Key")) {
+                    addMessage("Go to <a href='settings.php' style='color:#fff;text-decoration:underline;'>Settings</a> to configure it.", 'ai');
+                }
+            }
+        } catch (error) {
+            removeLoading(loadingId);
+            addMessage("❌ Connection error. Please try again.", 'ai');
+            console.error(error);
+        }
     }
 
     function addMessage(text, type) {
@@ -340,15 +360,5 @@
     function removeLoading(id) {
         const el = document.getElementById(id);
         if (el) el.remove();
-    }
-
-    function getMockAIResponse(msg) {
-        msg = msg.toLowerCase();
-        if (msg.includes('hello') || msg.includes('hi')) return "Hello! Ready to learn something new today?";
-        if (msg.includes('html')) return "HTML (HyperText Markup Language) is the standard markup language for documents designed to be displayed in a web browser.";
-        if (msg.includes('php')) return "PHP is a popular general-purpose scripting language that is especially suited to web development.";
-        if (msg.includes('help')) return "I can explain course topics, help with quizzes, or guide you through the materials. Just ask!";
-        if (msg.includes('quiz')) return "You can access your quizzes from the 'My Quizzes' section in the sidebar. Good luck!";
-        return "That's an interesting question! Based on your current course material, I'd suggest checking the 'Introduction' module for more details.";
     }
 </script>

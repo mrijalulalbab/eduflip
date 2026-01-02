@@ -114,18 +114,42 @@ $users = getAllUsers($search, $role);
                                     <?php echo date('M d, Y', strtotime($user['created_at'])); ?>
                                 </td>
                                 <td class="text-right">
-                                    <div class="flex items-center justify-end gap-2">
+                                <td class="text-right">
+                                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem;">
                                         <!-- Actions Form -->
-                                        <form method="POST" style="display:inline;">
+                                        <form method="POST" style="display:inline; margin: 0;">
                                             <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
                                             <?php if ($user['status'] === 'suspended' || $user['status'] === 'pending'): ?>
-                                                <button type="submit" name="action" value="activate" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white flex items-center justify-center transition" title="Activate" onclick="return confirm('Activate this user?')"><i class="ri-check-circle-line"></i></button>
+                                                <button type="submit" name="action" value="activate" 
+                                                    style="width: 36px; height: 36px; border-radius: 8px; background: rgba(34, 197, 94, 0.2); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0;"
+                                                    onmouseover="this.style.background='#16a34a'; this.style.color='white';"
+                                                    onmouseout="this.style.background='rgba(34, 197, 94, 0.2)'; this.style.color='#16a34a';"
+                                                    title="Activate User" 
+                                                    onclick="return confirm('Activate this user?')">
+                                                    <i class="ri-check-line" style="font-size: 1.25rem; line-height: 1;"></i>
+                                                </button>
                                             <?php else: ?>
-                                                <button type="submit" name="action" value="suspend" class="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition" title="Suspend" onclick="return confirm('Suspend this user?')"><i class="ri-prohibited-line"></i></button>
+                                                <button type="submit" name="action" value="suspend" 
+                                                    style="width: 36px; height: 36px; border-radius: 8px; background: rgba(239, 68, 68, 0.2); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0;"
+                                                    onmouseover="this.style.background='#dc2626'; this.style.color='white';"
+                                                    onmouseout="this.style.background='rgba(239, 68, 68, 0.2)'; this.style.color='#dc2626';"
+                                                    title="Suspend User" 
+                                                    onclick="return confirm('Suspend this user?')">
+                                                    <i class="ri-prohibited-line" style="font-size: 1.25rem; line-height: 1;"></i>
+                                                </button>
                                             <?php endif; ?>
                                         </form>
-                                        <a href="#" class="w-8 h-8 rounded-lg bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white flex items-center justify-center transition" title="Edit"><i class="ri-edit-line"></i></a>
+                                        
+                                        <!-- Restore Edit Button -->
+                                        <a href="#" 
+                                           style="width: 36px; height: 36px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); color: #9ca3af; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;"
+                                           onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='white';"
+                                           onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'; this.style.color='#9ca3af';"
+                                           title="Edit">
+                                            <i class="ri-pencil-line" style="font-size: 1.2rem; line-height: 1;"></i>
+                                        </a>
                                     </div>
+                                </td>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

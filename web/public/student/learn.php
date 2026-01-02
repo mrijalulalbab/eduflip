@@ -295,6 +295,19 @@ include 'includes/header.php';
         border-right: 3px solid var(--c-accent); /* Right border indicator looks modern */
     }
     
+    .playlist-item.locked {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: rgba(0,0,0,0.2);
+    }
+    .playlist-item.locked:hover {
+        background: rgba(0,0,0,0.2);
+        color: var(--c-text-secondary);
+    }
+    .playlist-item.locked .icon-box {
+        color: #64748b;
+    }
+    
     .playlist-item .icon-box {
         margin-top: 2px;
         flex-shrink: 0;
